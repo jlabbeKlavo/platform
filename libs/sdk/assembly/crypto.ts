@@ -128,6 +128,8 @@ class SubtleCrypto {
             return 5;
         if (input === "sha2-512" || input === "sha512")
             return 6;
+        if (input === "secp256k1")
+            return 7;
         return -1;
     }
 
@@ -536,16 +538,20 @@ class CryptoSHA {
     }
 
     static digestSize(algorithm: string): number {
-        switch (algorithm) {
-            case "sha2-256": return 32;
-            case "sha256": return 32;
-            case "sha2-384": return 48;
-            case "sha384": return 48;
-            case "sha2-512": return 64;
-            case "sha512": return 64;
-            default:
-                break;
-        }
+        switch (algorithm)
+        {
+        case "sha2-256": 
+        case "sha256": 
+            return 32;
+        case "sha2-384": 
+        case "sha384": 
+            return 48;
+        case "sha2-512": 
+        case "sha512": 
+            return 64;
+        default:            
+            break;
+        }        
         return 0;
     }
 
