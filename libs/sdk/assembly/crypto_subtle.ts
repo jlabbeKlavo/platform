@@ -21,41 +21,49 @@ class CryptoKey extends Key {
 }
 
 export class SubtleCrypto {
-    static generateKey(algorithm: string, extractable: boolean, usages: string[]): CryptoKey | null
+    static generateKey(algorithm: string, algo_metadata: string, extractable: boolean, usages: string[]): CryptoKey | null
     {
-        let key = CryptoImpl.generateKey(MemoryType.InMemory, "", algorithm, extractable, usages);
+        let key = CryptoImpl.generateKey(MemoryType.InMemory, "", algorithm, algo_metadata, extractable, usages);
         if (!key)
             return null;
         return new CryptoKey(key.name, algorithm, extractable, usages);
     }
 
-    static encrypt(key: CryptoKey, clear_text: string): u8[]
+    static encrypt(key: CryptoKey, encryption_info: string, clear_text: string): u8[]
     {
-        return CryptoImpl.encrypt(key.name, clear_text);
+        return CryptoImpl.encrypt(key.name, encryption_info, clear_text);
     }
     
-    static decrypt(key: CryptoKey, cipher_text: u8[]): string
+    static decrypt(key: CryptoKey, decryption_info: string, cipher_text: u8[]): string
     {
-        return CryptoImpl.decrypt(key.name, cipher_text);
+        return CryptoImpl.decrypt(key.name, decryption_info, cipher_text);
     }
     
-    static sign(key: CryptoKey, text: string): u8[]
+    static sign(key: CryptoKey, signature_info: string, text: string): u8[]
     {
-        return CryptoImpl.sign(key.name, text);
+        return CryptoImpl.sign(key.name, signature_info, text);
     }
     
-    static verify(key: CryptoKey, text: string, signature: u8[]): boolean
+    static verify(key: CryptoKey, signature_info: string, text: string, signature: u8[]): boolean
     {
-        return CryptoImpl.verify(key.name, text, signature);
+        return CryptoImpl.verify(key.name, signature_info, text, signature);
     }
     
-    static digest(algorithm: string, text: string): u8[]
+    static digest(algorithm: string, hash_info: string, text: string): u8[]
     {
-        return CryptoImpl.digest(algorithm, text);
+        return CryptoImpl.digest(algorithm, hash_info, text);
     }    
-    static importKey(format: string, b64Data: string, algorithm: string, extractable: boolean, usages: string[]): CryptoKey | null
+    static importKey(format: string, b64Data: string, algorithm: string, algo_metadata: string, extractable: boolean, usages: string[]): CryptoKey | null
     {
-        let key = CryptoImpl.importKey(MemoryType.InMemory, "", format, b64Data, algorithm, extractable, usages);
+        let key = CryptoImpl.importKey(MemoryType.InMemory, "", format, b64Data, algorithm, algo_metadata, extractable, usages);
+        if (!key)
+            return null;
+        return new CryptoKey(key.name, algorithm, extractable, usages);
+    }
+
+    static unwrapKey(decryptionKey: CryptoKey, decryption_info: string, format: string, b64Data: string, algorithm: string, algo_metadata: string, extractable: boolean, usages: string[]): CryptoKey | null
+    {
+        let key = CryptoImpl.unwrapKey(MemoryType.InMemory, decryptionKey.name, decryption_info, "", format, b64Data, algorithm, algo_metadata, extractable, usages);
         if (!key)
             return null;
         return new CryptoKey(key.name, algorithm, extractable, usages);

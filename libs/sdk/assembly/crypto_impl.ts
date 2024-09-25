@@ -3,47 +3,58 @@ import uuid from './uuid';
 
 // @ts-ignore: decorator
 @external("env", "key_exists")
-declare function key_exists(key_name: ArrayBuffer): boolean;
+declare function wasm_key_exists(key_name: ArrayBuffer): boolean;
 // @ts-ignore: decorator
 @external("env", "encrypt")
-declare function encrypt_wasm(key_name: ArrayBuffer, clear_text: ArrayBuffer, clear_text_size: i32, cipher_text: ArrayBuffer, cipher_text_size: i32): i32;
+declare function wasm_encrypt(key_name: ArrayBuffer, encryption_info: ArrayBuffer, clear_text: ArrayBuffer, clear_text_size: i32, cipher_text: ArrayBuffer, cipher_text_size: i32): i32;
 // @ts-ignore: decorator
 @external("env", "decrypt")
-declare function decrypt_wasm(key_name: ArrayBuffer, cipher_text: ArrayBuffer, cipher_text_size: i32, clear_text: ArrayBuffer, clear_text_size: i32): i32;
+declare function wasm_decrypt(key_name: ArrayBuffer, encryption_info: ArrayBuffer, cipher_text: ArrayBuffer, cipher_text_size: i32, clear_text: ArrayBuffer, clear_text_size: i32): i32;
 // @ts-ignore: decorator
 @external("env", "generate_key")
-declare function generate_key(key_name: ArrayBuffer, algorithm: i32, extractable: i32, usages: ArrayBuffer, usages_size: i32): i32;
+declare function wasm_generate_key(key_name: ArrayBuffer, algorithm: i32, algo_metadata: ArrayBuffer, extractable: i32, usages: ArrayBuffer, usages_size: i32): i32;
 // @ts-ignore: decorator
 @external("env", "import_key")
-declare function import_key(key_name: ArrayBuffer, key_format: i32, key_data: ArrayBuffer, key_data_size: i32, algorithm: i32, extractable: i32, usages: ArrayBuffer, usages_size: i32): i32;
+declare function wasm_import_key(key_name: ArrayBuffer, key_format: i32, key_data: ArrayBuffer, key_data_size: i32, algorithm: i32, algo_metadata: ArrayBuffer, extractable: i32, usages: ArrayBuffer, usages_size: i32): i32;
 // @ts-ignore: decorator
 @external("env", "export_key")
-declare function export_key(key_name: ArrayBuffer, key_format: i32, key: ArrayBuffer, key_size: i32): i32;
+declare function wasm_export_key(key_name: ArrayBuffer, key_format: i32, key: ArrayBuffer, key_size: i32): i32;
 // @ts-ignore: decorator
-@external("env", "get_formatted_public_key")
-declare function get_formatted_public_key(key_name: ArrayBuffer, key_format: i32, result: ArrayBuffer, result_size: i32): i32;
+@external("env", "get_public_key")
+declare function wasm_get_public_key(key_name: ArrayBuffer, key_format: i32, result: ArrayBuffer, result_size: i32): i32;
 // @ts-ignore: decorator
 @external("env", "sign")
-declare function sign_wasm(key_name: ArrayBuffer, clear_text: ArrayBuffer, clear_text_size: i32, cipher_text: ArrayBuffer, cipher_text_size: i32): i32;
+declare function wasm_sign(key_name: ArrayBuffer, signature_info: ArrayBuffer, text: ArrayBuffer, text_size: i32, signature: ArrayBuffer, signature_size: i32): i32;
 // @ts-ignore: decorator
 @external("env", "verify")
-declare function verify_wasm(key_name: ArrayBuffer, cipher_text: ArrayBuffer, cipher_text_size: i32, clear_text: ArrayBuffer, clear_text_size: i32): i32;
+declare function wasm_verify(key_name: ArrayBuffer, signature_info: ArrayBuffer, text: ArrayBuffer, text_size: i32, signature: ArrayBuffer, signature_size: i32): i32;
 // @ts-ignore: decorator
-@external("env", "digest_alg")
-declare function digest_alg(algorithm: i32, text: ArrayBuffer, text_size: i32, digest: ArrayBuffer, digest_size: i32): i32;
+@external("env", "digest")
+declare function wasm_digest(algorithm: i32, hash_info: ArrayBuffer, text: ArrayBuffer, text_size: i32, digest: ArrayBuffer, digest_size: i32): i32;
 // @ts-ignore: decorator
-@external("env", "get_random_bytes")
-declare function get_random_bytes_wasm(bytes: ArrayBuffer, size: i32): i32;
+@external("env", "unwrap_key")
+declare function wasm_unwrap_key(decryption_key_name: ArrayBuffer, encryption_info: ArrayBuffer, key_name_to_import: ArrayBuffer, key_format: i32, key_data: ArrayBuffer, key_data_size: i32, algorithm: i32, algo_metadata: ArrayBuffer, extractable: i32, usages: ArrayBuffer, usages_size: i32): i32;
+// @ts-ignore: decorator
+@external("env", "wrap_key")
+declare function wasm_wrap_key(key_name_to_export: ArrayBuffer, key_format: i32, encryption_key_name: ArrayBuffer, encryption_info: ArrayBuffer, key: ArrayBuffer, key_size: i32): i32;
 
 // @ts-ignore: decorator
 @external("env", "key_exists_in_memory")
-declare function key_exists_in_memory(key_name: ArrayBuffer): boolean;
+declare function wasm_key_exists_in_memory(key_name: ArrayBuffer): boolean;
 // @ts-ignore: decorator
 @external("env", "generate_key_in_memory")
-declare function generate_key_in_memory(key_name: ArrayBuffer, algorithm: i32, extractable: i32, usages: ArrayBuffer, usages_size: i32): i32;
+declare function wasm_generate_key_in_memory(key_name: ArrayBuffer, algorithm: i32, algo_metadata: ArrayBuffer, extractable: i32, usages: ArrayBuffer, usages_size: i32): i32;
 // @ts-ignore: decorator
 @external("env", "import_key_in_memory")
-declare function import_key_in_memory(key_name: ArrayBuffer, key_format: i32, key_data: ArrayBuffer, key_data_size: i32, algorithm: i32, extractable: i32, usages: ArrayBuffer, usages_size: i32): i32;
+declare function wasm_import_key_in_memory(key_name: ArrayBuffer, key_format: i32, key_data: ArrayBuffer, key_data_size: i32, algorithm: i32, algo_metadata: ArrayBuffer, extractable: i32, usages: ArrayBuffer, usages_size: i32): i32;
+// @ts-ignore: decorator
+@external("env", "unwrap_key_in_memory")
+declare function wasm_unwrap_key_in_memory(decryption_key_name: ArrayBuffer, encryption_info: ArrayBuffer, key_name_to_import: ArrayBuffer, key_format: i32, key_data: ArrayBuffer, key_data_size: i32, algorithm: i32, algo_metadata: ArrayBuffer, extractable: i32, usages: ArrayBuffer, usages_size: i32): i32;
+
+// @ts-ignore: decorator
+@external("env", "get_random_bytes")
+declare function wasm_get_random_bytes(bytes: ArrayBuffer, size: i32): i32;
+
 
 export class Key {
 
@@ -83,6 +94,8 @@ export class CryptoImpl {
             return 3;
         if (input === "sec1")
             return 4;
+        if (input === "pkcs1")
+            return 5;
         return -1;
     }
 
@@ -135,15 +148,15 @@ export class CryptoImpl {
     static keyExists(in_memory: MemoryType, key_name: string): boolean {        
         let result = false;
         if (in_memory == MemoryType.InMemory) {
-            result = key_exists_in_memory(String.UTF8.encode(key_name, true));
+            result = wasm_key_exists_in_memory(String.UTF8.encode(key_name, true));
         }
         else {
-            result = key_exists(String.UTF8.encode(key_name, true));
+            result = wasm_key_exists(String.UTF8.encode(key_name, true));
         }
         return result;
     }
 
-    static generateKey(in_memory: MemoryType, key_name: string, algorithm: string, extractable: boolean, usages: string[]): Key | null
+    static generateKey(in_memory: MemoryType, key_name: string, algorithm: string, algo_metadata: string, extractable: boolean, usages: string[]): Key | null
     {
         let iAlgorithm = CryptoImpl.algorithm(algorithm);
         if (iAlgorithm < 0)
@@ -158,12 +171,12 @@ export class CryptoImpl {
         const key = new Key(key_name);
         let result = 0;
         if (in_memory == MemoryType.InMemory) {
-            result = generate_key_in_memory(
-                String.UTF8.encode(key.name, true), iAlgorithm, extractable?1:0, local_usages.buffer, local_usages.length);    
+            result = wasm_generate_key_in_memory(
+                String.UTF8.encode(key.name, true), iAlgorithm, String.UTF8.encode(algo_metadata, true), extractable?1:0, local_usages.buffer, local_usages.length);    
         }
         else {
-            result = generate_key(
-                String.UTF8.encode(key.name, true), iAlgorithm, extractable?1:0, local_usages.buffer, local_usages.length);
+            result = wasm_generate_key(
+                String.UTF8.encode(key.name, true), iAlgorithm, String.UTF8.encode(algo_metadata, true), extractable?1:0, local_usages.buffer, local_usages.length);
         }
         if (result < 0)
             return null;
@@ -171,19 +184,20 @@ export class CryptoImpl {
         return key;
     }
 
-    static encrypt(key_name: string, clear_text: string): u8[]
+    static encrypt(key_name: string, encrypt_info: string, clear_text: string): u8[]
     {
         let k = String.UTF8.encode(key_name, true);
+        let info = String.UTF8.encode(encrypt_info, true);
         let t = String.UTF8.encode(clear_text, false);
         let value = new Uint8Array(64);
-        let result = encrypt_wasm(k, t, t.byteLength, value.buffer, value.byteLength);
+        let result = wasm_encrypt(k, info, t, t.byteLength, value.buffer, value.byteLength);
         let ret: u8[] = [];
         if (result < 0)
             return ret;
         if (result > value.byteLength) {
             // buffer not big enough, retry with a properly sized one
             value = new Uint8Array(result);
-            result = encrypt_wasm(k, t, t.byteLength, value.buffer, value.byteLength);
+            result = wasm_encrypt(k, info, t, t.byteLength, value.buffer, value.byteLength);
             if (result < 0)
                 return ret;
         }
@@ -192,39 +206,41 @@ export class CryptoImpl {
         return ret;
     }
     
-    static decrypt(key_name: string, cipher_text: u8[]): string
+    static decrypt(key_name: string, encrypt_info: string, cipher_text: u8[]): string
     {
         let k = String.UTF8.encode(key_name, true);
+        let info = String.UTF8.encode(encrypt_info, true);
         let buffer = new Uint8Array(cipher_text.length);
         for (let i = 0; i < cipher_text.length; ++i)
             buffer[i] = cipher_text[i];
         let value = new ArrayBuffer(64);
-        let result = decrypt_wasm(k, buffer.buffer, buffer.byteLength, value, value.byteLength);
+        let result = wasm_decrypt(k, info, buffer.buffer, buffer.byteLength, value, value.byteLength);
         if (result < 0)
             return ""; // todo : report error
         if (result > value.byteLength) {
             // buffer not big enough, retry with a properly sized one
             value = new ArrayBuffer(result);
-            result = decrypt_wasm(k, buffer.buffer, buffer.byteLength, value, value.byteLength);
+            result = wasm_decrypt(k, info, buffer.buffer, buffer.byteLength, value, value.byteLength);
             if (result < 0)
                 return ""; // todo : report error
         }
         return String.UTF8.decode(value.slice(0, result), false);
     }
     
-    static sign(key_name: string, text: string): u8[]
+    static sign(key_name: string, signature_info: string, text: string): u8[]
     {
         let k = String.UTF8.encode(key_name, true);
+        let info = String.UTF8.encode(signature_info, true);
         let t = String.UTF8.encode(text, false);
         let value = new Uint8Array(64);
-        let result = sign_wasm(k, t, t.byteLength, value.buffer, value.byteLength);
+        let result = wasm_sign(k, info, t, t.byteLength, value.buffer, value.byteLength);
         let ret: u8[] = [];
         if (result < 0)
             return ret; // todo : report error
         if (result > value.byteLength) {
             // buffer not big enough, retry with a properly sized one
             value = new Uint8Array(result);
-            result = sign_wasm(k, t, t.byteLength, value.buffer, value.byteLength);
+            result = wasm_sign(k, info, t, t.byteLength, value.buffer, value.byteLength);
             if (result < 0)
                 return ret; // todo : report error
         }
@@ -233,17 +249,18 @@ export class CryptoImpl {
         return ret;
     }
     
-    static verify(key_name: string, text: string, signature: u8[]): boolean
+    static verify(key_name: string, signature_info: string, text: string, signature: u8[]): boolean
     {
         let k = String.UTF8.encode(key_name, true);
+        let info = String.UTF8.encode(signature_info, true);
         let t = String.UTF8.encode(text, false);
         let buffer = new Uint8Array(signature.length);
         for (let i = 0; i < signature.length; ++i)
             buffer[i] = signature[i];
-        return verify_wasm(k, t, t.byteLength, buffer.buffer, buffer.byteLength) != 0;
+        return wasm_verify(k, info, t, t.byteLength, buffer.buffer, buffer.byteLength) != 0;
     }
     
-    static digest(algorithm: string, text: string): u8[]
+    static digest(algorithm: string, hash_info: string, text: string): u8[]
     {
         let ret: u8[] = [];
         let iAlgorithm = CryptoImpl.algorithm(algorithm);
@@ -251,14 +268,15 @@ export class CryptoImpl {
             return ret;
 
         let t = String.UTF8.encode(text, false);
+        let info = String.UTF8.encode(hash_info, true);
         let value = new Uint8Array(32);
-        let result = digest_alg(iAlgorithm, t, t.byteLength, value.buffer, value.byteLength);
+        let result = wasm_digest(iAlgorithm, info, t, t.byteLength, value.buffer, value.byteLength);
         if (result < 0)
             return ret; // todo : report error
         if (result > value.byteLength) {
             // buffer not big enough, retry with a properly sized one
             value = new Uint8Array(result);
-            result = digest_alg(iAlgorithm, t, t.byteLength, value.buffer, value.byteLength);
+            result = wasm_digest(iAlgorithm, info, t, t.byteLength, value.buffer, value.byteLength);
             if (result < 0)
                 return ret; // todo : report error
         }
@@ -266,7 +284,7 @@ export class CryptoImpl {
             ret[i] = value[i];
         return ret;
     }    
-    static importKey(in_memory: MemoryType, key_name: string, format: string, b64Data: string, algorithm: string, extractable: boolean, usages: string[]): Key | null
+    static importKey(in_memory: MemoryType, key_name: string, format: string, b64Data: string, algorithm: string, algo_metadata: string, extractable: boolean, usages: string[]): Key | null
     {
         const key = new Key(key_name);
 
@@ -288,12 +306,12 @@ export class CryptoImpl {
 
         let result = 0;
         if (in_memory == MemoryType.InMemory) {
-            result = import_key_in_memory(String.UTF8.encode(key.name, true), iFormat, rawData.buffer, rawData.byteLength,
-                iAlgorithm, extractable ? 1 : 0, local_usages.buffer, local_usages.byteLength);
+            result = wasm_import_key_in_memory(String.UTF8.encode(key.name, true), iFormat, rawData.buffer, rawData.byteLength,
+                iAlgorithm, String.UTF8.encode(algo_metadata, true), extractable ? 1 : 0, local_usages.buffer, local_usages.byteLength);
         }
         else {
-            result = import_key(String.UTF8.encode(key.name, true), iFormat, rawData.buffer, rawData.byteLength,
-                iAlgorithm, extractable ? 1 : 0, local_usages.buffer, local_usages.byteLength);
+            result = wasm_import_key(String.UTF8.encode(key.name, true), iFormat, rawData.buffer, rawData.byteLength,
+                iAlgorithm, String.UTF8.encode(algo_metadata, true), extractable ? 1 : 0, local_usages.buffer, local_usages.byteLength);
         }
         
         if (result < 0)
@@ -311,13 +329,73 @@ export class CryptoImpl {
 
         let key = new Uint8Array(32);
 
-        let result = export_key(String.UTF8.encode(key_name, true), iFormat, key.buffer, key.byteLength);
+        let result = wasm_export_key(String.UTF8.encode(key_name, true), iFormat, key.buffer, key.byteLength);
         if (result < 0)
             return ret;
         if (result > key.byteLength) {
             // buffer not big enough, retry with a properly sized one
             key = new Uint8Array(result);
-            result = export_key(String.UTF8.encode(key_name, true), iFormat, key.buffer, key.byteLength);
+            result = wasm_export_key(String.UTF8.encode(key_name, true), iFormat, key.buffer, key.byteLength);
+            if (result < 0)
+                return ret;
+        }
+        for (let i = 0; i < key.byteLength; ++i)
+            ret[i] = key[i];
+        return ret;
+    }        
+
+    static unwrapKey(in_memory: MemoryType, decryption_key_name: string, decryption_info: string, key_name: string, format: string, b64Data: string, algorithm: string, algo_metadata: string, extractable: boolean, usages: string[]): Key | null
+    {
+        const key = new Key(key_name);
+
+        let iFormat = CryptoImpl.format(format);
+        if (iFormat < 0)
+            return null;
+
+        let iAlgorithm = CryptoImpl.algorithm(algorithm);
+        if (iAlgorithm < 0)
+            return null;
+
+        const local_usages = new Uint8Array(usages.length);
+        for(let i = 0; i < usages.length; i++)
+        {
+            local_usages[i] = this.usage(usages[i]);
+        }
+
+        let rawData = decode(b64Data);
+
+        let result = 0;
+        if (in_memory == MemoryType.InMemory) {
+            result = wasm_unwrap_key_in_memory(String.UTF8.encode(decryption_key_name, true), String.UTF8.encode(decryption_info, true), String.UTF8.encode(key.name, true), iFormat, rawData.buffer, rawData.byteLength,
+                iAlgorithm, String.UTF8.encode(algo_metadata, true), extractable ? 1 : 0, local_usages.buffer, local_usages.byteLength);
+        }
+        else {
+            result = wasm_unwrap_key(String.UTF8.encode(decryption_key_name, true), String.UTF8.encode(decryption_info, true), String.UTF8.encode(key.name, true), iFormat, rawData.buffer, rawData.byteLength,
+                iAlgorithm, String.UTF8.encode(algo_metadata, true), extractable ? 1 : 0, local_usages.buffer, local_usages.byteLength);
+        }
+        
+        if (result < 0)
+            return null;
+    
+        return key;
+    }
+
+    static wrapKey(encryption_key_name: string, encryption_info: string, key_name: string, format: string): u8[]
+    {
+        let ret: u8[] = [];
+        let iFormat = CryptoImpl.format(format);
+        if (iFormat < 0)
+            return ret;
+
+        let key = new Uint8Array(32);
+
+        let result = wasm_wrap_key(String.UTF8.encode(key_name, true), iFormat, String.UTF8.encode(encryption_key_name, true), String.UTF8.encode(encryption_info, true), key.buffer, key.byteLength);
+        if (result < 0)
+            return ret;
+        if (result > key.byteLength) {
+            // buffer not big enough, retry with a properly sized one
+            key = new Uint8Array(result);
+            result = wasm_wrap_key(String.UTF8.encode(key_name, true), iFormat, String.UTF8.encode(encryption_key_name, true), String.UTF8.encode(encryption_info, true), key.buffer, key.byteLength);
             if (result < 0)
                 return ret;
         }
@@ -334,13 +412,13 @@ export class CryptoImpl {
             return ret;
 
         let key = new Uint8Array(32);
-        let result = get_formatted_public_key(String.UTF8.encode(key_name, true), iFormat, key.buffer, key.byteLength);
+        let result = wasm_get_public_key(String.UTF8.encode(key_name, true), iFormat, key.buffer, key.byteLength);
         if (result < 0)
             return ret;
         if (result > key.byteLength) {
             // buffer not big enough, retry with a properly sized one
             key = new Uint8Array(result);
-            result = get_formatted_public_key(String.UTF8.encode(key_name, true), iFormat, key.buffer, key.byteLength);
+            result = wasm_get_public_key(String.UTF8.encode(key_name, true), iFormat, key.buffer, key.byteLength);
             if (result < 0)
                 return ret;
         }
@@ -351,7 +429,7 @@ export class CryptoImpl {
 
     static getRandomBytes(size: i32): u8[] {
         const value = new Uint8Array(size);
-        const result = get_random_bytes_wasm(value.buffer, value.byteLength);
+        const result = wasm_get_random_bytes(value.buffer, value.byteLength);
         const ret: u8[] = []
         if (result < 0)
             return ret; // todo : report error
