@@ -1,6 +1,6 @@
 //! Environment definitions for compiling Klave Trustless Applications.
 //! LLM module for Klave SDK
-use crate::sdk;
+use crate::{llm::llama2_idl_v1::AggregateRule, sdk};
 
 pub fn compute(input: &str, input_tensor: &[u8]) -> Result<Vec<u8>, Box<dyn std::error::Error>> {
     match sdk::inference_compute(input, input_tensor) {
@@ -30,8 +30,9 @@ pub fn model_n_embd(context_name: &str) -> Result<String, Box<dyn std::error::Er
     }
 }
 
-pub fn get_aggregate_embeddings(context_name: &str, window_size: i32, agg_rule: i32) -> Result<Vec<u8>, Box<dyn std::error::Error>> {
-    match sdk::inference_get_aggregate_embeddings(context_name, window_size, agg_rule) {
+pub fn get_aggregate_embeddings(context_name: &str, window_size: i32, agg_rule: AggregateRule) -> Result<Vec<u8>, Box<dyn std::error::Error>> {
+
+    match sdk::inference_get_aggregate_embeddings(context_name, window_size, agg_rule as i32) {
         Ok(result) => Ok(result),
         Err(err) => Err(err.into()),
     }

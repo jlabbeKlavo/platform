@@ -87,3 +87,14 @@ pub struct InferenceIteration {
     pub piece: Vec<u8>,
     pub complete: bool,
 }
+
+pub enum AggregateRule {
+    None,
+    Average,
+    Maximum,
+    Minimum,
+    Median,
+    Any,
+    First,
+    Last,
+}

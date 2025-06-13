@@ -72,7 +72,7 @@ pub fn delete_all_execution_contexts() -> Result<(), Box<dyn std::error::Error>>
     }
 }
 
-pub fn graph_model_n_embd(model_name: &str) -> Result<String, Box<dyn std::error::Error>> {
+pub fn model_n_embd(model_name: &str) -> Result<String, Box<dyn std::error::Error>> {
     match sdk::graph_model_n_embd(model_name) {
         Ok(size) => Ok(size),
         Err(err) => Err(err.into()),
