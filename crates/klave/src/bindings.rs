@@ -3231,7 +3231,7 @@ pub mod klave {
             }
             #[allow(unused_unsafe, clippy::all)]
             /// PostGreSql
-            pub fn pgsql_connection_open(uri: &str) -> Result<_rt::String, _rt::String> {
+            pub fn connection_open(uri: &str) -> Result<_rt::String, _rt::String> {
                 unsafe {
                     #[cfg_attr(target_pointer_width = "64", repr(align(8)))]
                     #[cfg_attr(target_pointer_width = "32", repr(align(4)))]
@@ -3251,7 +3251,7 @@ pub mod klave {
                     #[cfg(target_arch = "wasm32")]
                     #[link(wasm_import_module = "klave:sdk/sdk")]
                     unsafe extern "C" {
-                        #[link_name = "pgsql-connection-open"]
+                        #[link_name = "connection-open"]
                         fn wit_import2(_: *mut u8, _: usize, _: *mut u8);
                     }
                     #[cfg(not(target_arch = "wasm32"))]
@@ -3303,7 +3303,7 @@ pub mod klave {
                 }
             }
             #[allow(unused_unsafe, clippy::all)]
-            pub fn pgsql_query(
+            pub fn sql_query(
                 connection: &str,
                 query: &str,
             ) -> Result<_rt::String, _rt::String> {
@@ -3329,7 +3329,7 @@ pub mod klave {
                     #[cfg(target_arch = "wasm32")]
                     #[link(wasm_import_module = "klave:sdk/sdk")]
                     unsafe extern "C" {
-                        #[link_name = "pgsql-query"]
+                        #[link_name = "sql-query"]
                         fn wit_import3(
                             _: *mut u8,
                             _: usize,
@@ -3395,7 +3395,7 @@ pub mod klave {
                 }
             }
             #[allow(unused_unsafe, clippy::all)]
-            pub fn pgsql_exec(
+            pub fn sql_exec(
                 connection: &str,
                 command: &str,
             ) -> Result<_rt::String, _rt::String> {
@@ -3421,7 +3421,7 @@ pub mod klave {
                     #[cfg(target_arch = "wasm32")]
                     #[link(wasm_import_module = "klave:sdk/sdk")]
                     unsafe extern "C" {
-                        #[link_name = "pgsql-exec"]
+                        #[link_name = "sql-exec"]
                         fn wit_import3(
                             _: *mut u8,
                             _: usize,
@@ -3488,7 +3488,7 @@ pub mod klave {
             }
             #[allow(unused_unsafe, clippy::all)]
             /// SecretLlama
-            pub fn graph_models() -> Result<_rt::Vec<_rt::String>, _rt::String> {
+            pub fn graph_models() -> Result<_rt::String, _rt::String> {
                 unsafe {
                     #[cfg_attr(target_pointer_width = "64", repr(align(8)))]
                     #[cfg_attr(target_pointer_width = "32", repr(align(4)))]
@@ -3514,7 +3514,7 @@ pub mod klave {
                     }
                     unsafe { wit_import1(ptr0) };
                     let l2 = i32::from(*ptr0.add(0).cast::<u8>());
-                    let result12 = match l2 {
+                    let result9 = match l2 {
                         0 => {
                             let e = {
                                 let l3 = *ptr0
@@ -3523,61 +3523,41 @@ pub mod klave {
                                 let l4 = *ptr0
                                     .add(2 * ::core::mem::size_of::<*const u8>())
                                     .cast::<usize>();
-                                let base8 = l3;
-                                let len8 = l4;
-                                let mut result8 = _rt::Vec::with_capacity(len8);
-                                for i in 0..len8 {
-                                    let base = base8
-                                        .add(i * (2 * ::core::mem::size_of::<*const u8>()));
-                                    let e8 = {
-                                        let l5 = *base.add(0).cast::<*mut u8>();
-                                        let l6 = *base
-                                            .add(::core::mem::size_of::<*const u8>())
-                                            .cast::<usize>();
-                                        let len7 = l6;
-                                        let bytes7 = _rt::Vec::from_raw_parts(
-                                            l5.cast(),
-                                            len7,
-                                            len7,
-                                        );
-                                        _rt::string_lift(bytes7)
-                                    };
-                                    result8.push(e8);
-                                }
-                                _rt::cabi_dealloc(
-                                    base8,
-                                    len8 * (2 * ::core::mem::size_of::<*const u8>()),
-                                    ::core::mem::size_of::<*const u8>(),
+                                let len5 = l4;
+                                let bytes5 = _rt::Vec::from_raw_parts(
+                                    l3.cast(),
+                                    len5,
+                                    len5,
                                 );
-                                result8
+                                _rt::string_lift(bytes5)
                             };
                             Ok(e)
                         }
                         1 => {
                             let e = {
-                                let l9 = *ptr0
+                                let l6 = *ptr0
                                     .add(::core::mem::size_of::<*const u8>())
                                     .cast::<*mut u8>();
-                                let l10 = *ptr0
+                                let l7 = *ptr0
                                     .add(2 * ::core::mem::size_of::<*const u8>())
                                     .cast::<usize>();
-                                let len11 = l10;
-                                let bytes11 = _rt::Vec::from_raw_parts(
-                                    l9.cast(),
-                                    len11,
-                                    len11,
+                                let len8 = l7;
+                                let bytes8 = _rt::Vec::from_raw_parts(
+                                    l6.cast(),
+                                    len8,
+                                    len8,
                                 );
-                                _rt::string_lift(bytes11)
+                                _rt::string_lift(bytes8)
                             };
                             Err(e)
                         }
                         _ => _rt::invalid_enum_discriminant(),
                     };
-                    result12
+                    result9
                 }
             }
             #[allow(unused_unsafe, clippy::all)]
-            pub fn graph_tokenizers() -> Result<_rt::Vec<_rt::String>, _rt::String> {
+            pub fn graph_tokenizers() -> Result<_rt::String, _rt::String> {
                 unsafe {
                     #[cfg_attr(target_pointer_width = "64", repr(align(8)))]
                     #[cfg_attr(target_pointer_width = "32", repr(align(4)))]
@@ -3603,7 +3583,7 @@ pub mod klave {
                     }
                     unsafe { wit_import1(ptr0) };
                     let l2 = i32::from(*ptr0.add(0).cast::<u8>());
-                    let result12 = match l2 {
+                    let result9 = match l2 {
                         0 => {
                             let e = {
                                 let l3 = *ptr0
@@ -3612,57 +3592,37 @@ pub mod klave {
                                 let l4 = *ptr0
                                     .add(2 * ::core::mem::size_of::<*const u8>())
                                     .cast::<usize>();
-                                let base8 = l3;
-                                let len8 = l4;
-                                let mut result8 = _rt::Vec::with_capacity(len8);
-                                for i in 0..len8 {
-                                    let base = base8
-                                        .add(i * (2 * ::core::mem::size_of::<*const u8>()));
-                                    let e8 = {
-                                        let l5 = *base.add(0).cast::<*mut u8>();
-                                        let l6 = *base
-                                            .add(::core::mem::size_of::<*const u8>())
-                                            .cast::<usize>();
-                                        let len7 = l6;
-                                        let bytes7 = _rt::Vec::from_raw_parts(
-                                            l5.cast(),
-                                            len7,
-                                            len7,
-                                        );
-                                        _rt::string_lift(bytes7)
-                                    };
-                                    result8.push(e8);
-                                }
-                                _rt::cabi_dealloc(
-                                    base8,
-                                    len8 * (2 * ::core::mem::size_of::<*const u8>()),
-                                    ::core::mem::size_of::<*const u8>(),
+                                let len5 = l4;
+                                let bytes5 = _rt::Vec::from_raw_parts(
+                                    l3.cast(),
+                                    len5,
+                                    len5,
                                 );
-                                result8
+                                _rt::string_lift(bytes5)
                             };
                             Ok(e)
                         }
                         1 => {
                             let e = {
-                                let l9 = *ptr0
+                                let l6 = *ptr0
                                     .add(::core::mem::size_of::<*const u8>())
                                     .cast::<*mut u8>();
-                                let l10 = *ptr0
+                                let l7 = *ptr0
                                     .add(2 * ::core::mem::size_of::<*const u8>())
                                     .cast::<usize>();
-                                let len11 = l10;
-                                let bytes11 = _rt::Vec::from_raw_parts(
-                                    l9.cast(),
-                                    len11,
-                                    len11,
+                                let len8 = l7;
+                                let bytes8 = _rt::Vec::from_raw_parts(
+                                    l6.cast(),
+                                    len8,
+                                    len8,
                                 );
-                                _rt::string_lift(bytes11)
+                                _rt::string_lift(bytes8)
                             };
                             Err(e)
                         }
                         _ => _rt::invalid_enum_discriminant(),
                     };
-                    result12
+                    result9
                 }
             }
             #[allow(unused_unsafe, clippy::all)]
@@ -3858,9 +3818,7 @@ pub mod klave {
                 }
             }
             #[allow(unused_unsafe, clippy::all)]
-            pub fn graph_init_execution_context(
-                input: &str,
-            ) -> Result<_rt::String, _rt::String> {
+            pub fn graph_init_execution_context(input: &str) -> Result<(), _rt::String> {
                 unsafe {
                     #[cfg_attr(target_pointer_width = "64", repr(align(8)))]
                     #[cfg_attr(target_pointer_width = "32", repr(align(4)))]
@@ -3889,8 +3847,12 @@ pub mod klave {
                     }
                     unsafe { wit_import2(ptr0.cast_mut(), len0, ptr1) };
                     let l3 = i32::from(*ptr1.add(0).cast::<u8>());
-                    let result10 = match l3 {
+                    let result7 = match l3 {
                         0 => {
+                            let e = ();
+                            Ok(e)
+                        }
+                        1 => {
                             let e = {
                                 let l4 = *ptr1
                                     .add(::core::mem::size_of::<*const u8>())
@@ -3906,29 +3868,11 @@ pub mod klave {
                                 );
                                 _rt::string_lift(bytes6)
                             };
-                            Ok(e)
-                        }
-                        1 => {
-                            let e = {
-                                let l7 = *ptr1
-                                    .add(::core::mem::size_of::<*const u8>())
-                                    .cast::<*mut u8>();
-                                let l8 = *ptr1
-                                    .add(2 * ::core::mem::size_of::<*const u8>())
-                                    .cast::<usize>();
-                                let len9 = l8;
-                                let bytes9 = _rt::Vec::from_raw_parts(
-                                    l7.cast(),
-                                    len9,
-                                    len9,
-                                );
-                                _rt::string_lift(bytes9)
-                            };
                             Err(e)
                         }
                         _ => _rt::invalid_enum_discriminant(),
                     };
-                    result10
+                    result7
                 }
             }
             #[allow(unused_unsafe, clippy::all)]
@@ -4316,6 +4260,83 @@ pub mod klave {
                         unreachable!()
                     }
                     unsafe { wit_import2(ptr0.cast_mut(), len0, ptr1) };
+                    let l3 = i32::from(*ptr1.add(0).cast::<u8>());
+                    let result10 = match l3 {
+                        0 => {
+                            let e = {
+                                let l4 = *ptr1
+                                    .add(::core::mem::size_of::<*const u8>())
+                                    .cast::<*mut u8>();
+                                let l5 = *ptr1
+                                    .add(2 * ::core::mem::size_of::<*const u8>())
+                                    .cast::<usize>();
+                                let len6 = l5;
+                                _rt::Vec::from_raw_parts(l4.cast(), len6, len6)
+                            };
+                            Ok(e)
+                        }
+                        1 => {
+                            let e = {
+                                let l7 = *ptr1
+                                    .add(::core::mem::size_of::<*const u8>())
+                                    .cast::<*mut u8>();
+                                let l8 = *ptr1
+                                    .add(2 * ::core::mem::size_of::<*const u8>())
+                                    .cast::<usize>();
+                                let len9 = l8;
+                                let bytes9 = _rt::Vec::from_raw_parts(
+                                    l7.cast(),
+                                    len9,
+                                    len9,
+                                );
+                                _rt::string_lift(bytes9)
+                            };
+                            Err(e)
+                        }
+                        _ => _rt::invalid_enum_discriminant(),
+                    };
+                    result10
+                }
+            }
+            #[allow(unused_unsafe, clippy::all)]
+            pub fn inference_get_pieces(
+                context_name: &str,
+                nb_pieces: i32,
+            ) -> Result<_rt::Vec<u8>, _rt::String> {
+                unsafe {
+                    #[cfg_attr(target_pointer_width = "64", repr(align(8)))]
+                    #[cfg_attr(target_pointer_width = "32", repr(align(4)))]
+                    struct RetArea(
+                        [::core::mem::MaybeUninit<
+                            u8,
+                        >; 3 * ::core::mem::size_of::<*const u8>()],
+                    );
+                    let mut ret_area = RetArea(
+                        [::core::mem::MaybeUninit::uninit(); 3
+                            * ::core::mem::size_of::<*const u8>()],
+                    );
+                    let vec0 = context_name;
+                    let ptr0 = vec0.as_ptr().cast::<u8>();
+                    let len0 = vec0.len();
+                    let ptr1 = ret_area.0.as_mut_ptr().cast::<u8>();
+                    #[cfg(target_arch = "wasm32")]
+                    #[link(wasm_import_module = "klave:sdk/sdk")]
+                    unsafe extern "C" {
+                        #[link_name = "inference-get-pieces"]
+                        fn wit_import2(_: *mut u8, _: usize, _: i32, _: *mut u8);
+                    }
+                    #[cfg(not(target_arch = "wasm32"))]
+                    unsafe extern "C" fn wit_import2(
+                        _: *mut u8,
+                        _: usize,
+                        _: i32,
+                        _: *mut u8,
+                    ) {
+                        unreachable!()
+                    }
+                    unsafe {
+                        wit_import2(ptr0.cast_mut(), len0, _rt::as_i32(&nb_pieces), ptr1)
+                    };
                     let l3 = i32::from(*ptr1.add(0).cast::<u8>());
                     let result10 = match l3 {
                         0 => {
@@ -4930,15 +4951,7 @@ mod _rt {
             self as i64
         }
     }
-    pub unsafe fn cabi_dealloc(ptr: *mut u8, size: usize, align: usize) {
-        if size == 0 {
-            return;
-        }
-        let layout = alloc::Layout::from_size_align_unchecked(size, align);
-        alloc::dealloc(ptr, layout);
-    }
     extern crate alloc as alloc_crate;
-    pub use alloc_crate::alloc;
 }
 #[cfg(target_arch = "wasm32")]
 #[unsafe(
@@ -4946,8 +4959,8 @@ mod _rt {
 )]
 #[doc(hidden)]
 #[allow(clippy::octal_escapes)]
-pub static __WIT_BINDGEN_COMPONENT_TYPE: [u8; 3178] = *b"\
-\0asm\x0d\0\x01\0\0\x19\x16wit-component-encoding\x04\0\x07\xea\x17\x01A\x02\x01\
+pub static __WIT_BINDGEN_COMPONENT_TYPE: [u8; 3214] = *b"\
+\0asm\x0d\0\x01\0\0\x19\x16wit-component-encoding\x04\0\x07\x8e\x18\x01A\x02\x01\
 A\x02\x01B\x7f\x01@\x01\x0aquery-names\x01\0\x04\0\x0eadd-user-query\x01\0\x01@\x01\
 \x10transaction-names\x01\0\x04\0\x14add-user-transaction\x01\x01\x01@\x01\x03ms\
 gs\x01\0\x04\0\x06notify\x01\x02\x04\0\x0cnotify-error\x01\x02\x04\0\x11on-succe\
@@ -4989,27 +5002,28 @@ signature\x05\0\x10\x04\0\x0dsimple-verify\x01$\x01@\x01\x03txt\x05\0\x06\x04\0\
 simple-digest\x01%\x01@\x01\x03lenz\0\x06\x04\0\x10get-random-bytes\x01&\x01@\x01\
 \x07requests\0\x03\x04\0\x0bhttps-query\x01'\x01@\x01\x09challenge\x05\0\x03\x04\
 \0\x09get-quote\x01(\x01@\x02\x0ccurrent-timex\x0cquote-binary\x05\0\x03\x04\0\x0c\
-verify-quote\x01)\x01@\x01\x03uris\0\x03\x04\0\x15pgsql-connection-open\x01*\x01\
-@\x02\x0aconnections\x05querys\0\x03\x04\0\x0bpgsql-query\x01+\x01@\x02\x0aconne\
-ctions\x07commands\0\x03\x04\0\x0apgsql-exec\x01,\x01ps\x01j\x01-\x01s\x01@\0\0.\
-\x04\0\x0cgraph-models\x01/\x04\0\x10graph-tokenizers\x01/\x01@\x03\x05inputs\x08\
-encodingz\x06targetz\0\x08\x04\0\x0agraph-load\x010\x01@\x01\x0amodel-names\0\x08\
-\x04\0\x12graph-load-by-name\x011\x04\0\x14graph-unload-by-name\x011\x01@\x01\x05\
-inputs\0\x03\x04\0\x1cgraph-init-execution-context\x012\x01@\x01\x0ccontext-name\
-s\0\x08\x04\0\x1egraph-delete-execution-context\x013\x01@\0\0\x08\x04\0#graph-de\
-lete-all-execution-contexts\x014\x01@\x01\x0amodel-names\0\x03\x04\0\x12graph-mo\
-del-n-embd\x015\x01@\x02\x05inputs\x0cinput-tensor\x05\0\x06\x04\0\x11inference-\
-compute\x016\x01@\x02\x0ccontext-names\x06prompt\x05\0\x08\x04\0\x14inference-ad\
-d-prompt\x017\x01@\x01\x0ccontext-names\0\x06\x04\0\x13inference-get-piece\x018\x01\
-@\x01\x0ccontext-names\0\x03\x04\0\x16inference-model-n-embd\x019\x01@\x03\x0cco\
-ntext-names\x0bwindow-sizez\x08agg-rulez\0\x06\x04\0\"inference-get-aggregate-em\
-beddings\x01:\x01@\x02\x0ccontext-names\x06prompt\x05\0\x06\x04\0\x10inference-e\
-ncode\x01;\x01@\x02\x0ccontext-names\x09token-ids\x05\0\x06\x04\0\x10inference-d\
-ecode\x01<\x01@\x02\x0ccontext-names\x09token-ids\x05\0\x08\x04\0\x10inference-i\
-ngest\x01=\x01@\0\x01\0\x04\0\x0fstart-recording\x01>\x04\0\x0estop-recording\x01\
->\x04\0\x12cancel-transaction\x01>\x03\0\x0dklave:sdk/sdk\x05\0\x04\0\x1dcompone\
-nt:klave-sdk/klave-sdk\x04\0\x0b\x0f\x01\0\x09klave-sdk\x03\0\0\0G\x09producers\x01\
-\x0cprocessed-by\x02\x0dwit-component\x070.227.1\x10wit-bindgen-rust\x060.41.0";
+verify-quote\x01)\x01@\x01\x03uris\0\x03\x04\0\x0fconnection-open\x01*\x01@\x02\x0a\
+connections\x05querys\0\x03\x04\0\x09sql-query\x01+\x01@\x02\x0aconnections\x07c\
+ommands\0\x03\x04\0\x08sql-exec\x01,\x01@\0\0\x03\x04\0\x0cgraph-models\x01-\x04\
+\0\x10graph-tokenizers\x01-\x01@\x03\x05inputs\x08encodingz\x06targetz\0\x08\x04\
+\0\x0agraph-load\x01.\x01@\x01\x0amodel-names\0\x08\x04\0\x12graph-load-by-name\x01\
+/\x04\0\x14graph-unload-by-name\x01/\x01@\x01\x05inputs\0\x08\x04\0\x1cgraph-ini\
+t-execution-context\x010\x01@\x01\x0ccontext-names\0\x08\x04\0\x1egraph-delete-e\
+xecution-context\x011\x01@\0\0\x08\x04\0#graph-delete-all-execution-contexts\x01\
+2\x01@\x01\x0amodel-names\0\x03\x04\0\x12graph-model-n-embd\x013\x01@\x02\x05inp\
+uts\x0cinput-tensor\x05\0\x06\x04\0\x11inference-compute\x014\x01@\x02\x0ccontex\
+t-names\x06prompt\x05\0\x08\x04\0\x14inference-add-prompt\x015\x01@\x01\x0cconte\
+xt-names\0\x06\x04\0\x13inference-get-piece\x016\x01@\x02\x0ccontext-names\x09nb\
+-piecesz\0\x06\x04\0\x14inference-get-pieces\x017\x01@\x01\x0ccontext-names\0\x03\
+\x04\0\x16inference-model-n-embd\x018\x01@\x03\x0ccontext-names\x0bwindow-sizez\x08\
+agg-rulez\0\x06\x04\0\"inference-get-aggregate-embeddings\x019\x01@\x02\x0cconte\
+xt-names\x06prompt\x05\0\x06\x04\0\x10inference-encode\x01:\x01@\x02\x0ccontext-\
+names\x09token-ids\x05\0\x06\x04\0\x10inference-decode\x01;\x01@\x02\x0ccontext-\
+names\x09token-ids\x05\0\x08\x04\0\x10inference-ingest\x01<\x01@\0\x01\0\x04\0\x0f\
+start-recording\x01=\x04\0\x0estop-recording\x01=\x04\0\x12cancel-transaction\x01\
+=\x03\0\x0dklave:sdk/sdk\x05\0\x04\0\x1dcomponent:klave-sdk/klave-sdk\x04\0\x0b\x0f\
+\x01\0\x09klave-sdk\x03\0\0\0G\x09producers\x01\x0cprocessed-by\x02\x0dwit-compo\
+nent\x070.227.1\x10wit-bindgen-rust\x060.41.0";
 #[inline(never)]
 #[doc(hidden)]
 pub fn __link_custom_section_describing_imports() {

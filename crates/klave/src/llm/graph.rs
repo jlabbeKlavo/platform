@@ -16,14 +16,14 @@ impl wasi_nn::LoadStatus {
     }
 }
 
-pub fn models() -> Result<Vec<String>, Box<dyn std::error::Error>> {
+pub fn models() -> Result<String, Box<dyn std::error::Error>> {
     match sdk::graph_models() {
         Ok(result) => Ok(result),
         Err(err) => Err(err.into()),
     }
 }
 
-pub fn tokenizers() -> Result<Vec<String>, Box<dyn std::error::Error>> {
+pub fn tokenizers() -> Result<String, Box<dyn std::error::Error>> {
     match sdk::graph_tokenizers() {
         Ok(result) => Ok(result),
         Err(err) => Err(err.into()),
