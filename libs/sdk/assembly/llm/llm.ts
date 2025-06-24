@@ -33,6 +33,8 @@ declare function wasm_inference_compute(context_name: ArrayBuffer, input_tensor:
 declare function wasm_inference_add_prompt(context_name: ArrayBuffer, prompt: ArrayBuffer, prompt_size: i32, error: ArrayBuffer, error_size: i32): i32;
 @external("env", "inference_get_piece")
 declare function wasm_inference_get_piece(context_name: ArrayBuffer, inference_iteration: ArrayBuffer, inference_iteration_size: i32): i32;
+@external("env", "inference_get_pieces")
+declare function wasm_inference_get_pieces(context_name: ArrayBuffer, nb_pieces: i32, inference_iteration: ArrayBuffer, inference_iteration_size: i32): i32;
 @external("env", "inference_get_aggregate_embeddings")
 declare function wasm_inference_get_aggregate_embeddings(context_name: ArrayBuffer, window_size: i32, agg_rule: i32, embedding: ArrayBuffer, embedding_size: i32): i32;
 @external("env", "inference_encode")
@@ -204,6 +206,20 @@ export function inferenceGetPiece(context_name: string): Result<ArrayBuffer, Err
         // buffer not big enough, retry with a properly sized one
         inference_iteration = new ArrayBuffer(abs(result));
         result = wasm_inference_get_piece(String.UTF8.encode(context_name, true), inference_iteration, inference_iteration.byteLength);
+    }
+    if (result < 0)
+        return { data: new ArrayBuffer(0), err: new Error(String.UTF8.decode(inference_iteration.slice(0, -result))) };
+    return { data: inference_iteration.slice(0, result) , err: null };
+}
+
+export function inferenceGetPieces(context_name: string, nb_pieces: i32): Result<ArrayBuffer, Error>
+{
+    let inference_iteration = new ArrayBuffer(64);
+    let result = wasm_inference_get_pieces(String.UTF8.encode(context_name, true), nb_pieces, inference_iteration, inference_iteration.byteLength);
+    if (abs(result) > inference_iteration.byteLength) {
+        // buffer not big enough, retry with a properly sized one
+        inference_iteration = new ArrayBuffer(abs(result));
+        result = wasm_inference_get_pieces(String.UTF8.encode(context_name, true), nb_pieces, inference_iteration, inference_iteration.byteLength);
     }
     if (result < 0)
         return { data: new ArrayBuffer(0), err: new Error(String.UTF8.decode(inference_iteration.slice(0, -result))) };
