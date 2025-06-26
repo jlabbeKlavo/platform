@@ -10,14 +10,24 @@ pub fn connection_open(uri: &str) -> Result<String, Box<dyn std::error::Error>> 
 }
 
 pub fn query(connection: &str, query: &str) -> Result<String, Box<dyn std::error::Error>> {
-    match sdk::sql_query(connection, query) {
+    //Remove all leading and trailing whitespace from the query and consecutive whitespaces and carriage returns
+    let query = query.trim().replace("\n", " ").replace("\r", " ").split_whitespace().collect::<Vec<&str>>().join(" ");    
+    if query.is_empty() {
+        return Err("Query cannot be empty".into());
+    }
+    match sdk::sql_query(connection, &query) {
         Ok(result) => Ok(result),
         Err(err) => Err(err.into()),
     }
 }
 
 pub fn execute(connection: &str, query: &str) -> Result<String, Box<dyn std::error::Error>> {
-    match sdk::sql_exec(connection, query) {
+    //Remove all leading and trailing whitespace from the query and consecutive whitespaces and carriage returns
+    let query = query.trim().replace("\n", " ").replace("\r", " ").split_whitespace().collect::<Vec<&str>>().join(" ");    
+    if query.is_empty() {
+        return Err("Query cannot be empty".into());
+    }
+    match sdk::sql_exec(connection, &query) {
         Ok(result) => Ok(result),
         Err(err) => Err(err.into()),
     }
