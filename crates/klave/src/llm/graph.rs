@@ -3,8 +3,17 @@
 use crate::sdk;
 
 // Re-export the IDL modules
-pub use crate::llm::llama2_idl_v1 as llama2;
+pub use crate::llm::secret_llama_idl_v1 as llama2;
 pub use crate::llm::wasi_nn_idl_v1 as wasi_nn;
+
+impl wasi_nn::ResponseStatus {
+    fn to_string(&self) -> &'static str {
+        match self {
+            wasi_nn::ResponseStatus::Success => "SUCCESS",
+            wasi_nn::ResponseStatus::Failed => "FAILED",
+        }
+    }
+}
 
 impl wasi_nn::LoadStatus {
     fn to_string(&self) -> &'static str {
@@ -26,6 +35,20 @@ pub fn models() -> Result<String, Box<dyn std::error::Error>> {
 pub fn tokenizers() -> Result<String, Box<dyn std::error::Error>> {
     match sdk::graph_tokenizers() {
         Ok(result) => Ok(result),
+        Err(err) => Err(err.into()),
+    }
+}
+
+pub fn save_model(model: &str) -> Result<&'static str, Box<dyn std::error::Error>> {
+    match sdk::graph_save_model(model) {
+        Ok(_) => Ok(wasi_nn::ResponseStatus::Success.to_string()),
+        Err(err) => Err(err.into()),
+    }
+}
+
+pub fn save_tokenizer(tokenizer: &str) -> Result<&'static str, Box<dyn std::error::Error>> {
+    match sdk::graph_save_tokenizer(tokenizer) {
+        Ok(_) => Ok(wasi_nn::ResponseStatus::Success.to_string()),
         Err(err) => Err(err.into()),
     }
 }

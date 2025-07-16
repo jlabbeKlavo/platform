@@ -3626,6 +3626,122 @@ pub mod klave {
                 }
             }
             #[allow(unused_unsafe, clippy::all)]
+            pub fn graph_save_model(model: &str) -> Result<(), _rt::String> {
+                unsafe {
+                    #[cfg_attr(target_pointer_width = "64", repr(align(8)))]
+                    #[cfg_attr(target_pointer_width = "32", repr(align(4)))]
+                    struct RetArea(
+                        [::core::mem::MaybeUninit<
+                            u8,
+                        >; 3 * ::core::mem::size_of::<*const u8>()],
+                    );
+                    let mut ret_area = RetArea(
+                        [::core::mem::MaybeUninit::uninit(); 3
+                            * ::core::mem::size_of::<*const u8>()],
+                    );
+                    let vec0 = model;
+                    let ptr0 = vec0.as_ptr().cast::<u8>();
+                    let len0 = vec0.len();
+                    let ptr1 = ret_area.0.as_mut_ptr().cast::<u8>();
+                    #[cfg(target_arch = "wasm32")]
+                    #[link(wasm_import_module = "klave:sdk/sdk")]
+                    unsafe extern "C" {
+                        #[link_name = "graph-save-model"]
+                        fn wit_import2(_: *mut u8, _: usize, _: *mut u8);
+                    }
+                    #[cfg(not(target_arch = "wasm32"))]
+                    unsafe extern "C" fn wit_import2(_: *mut u8, _: usize, _: *mut u8) {
+                        unreachable!()
+                    }
+                    unsafe { wit_import2(ptr0.cast_mut(), len0, ptr1) };
+                    let l3 = i32::from(*ptr1.add(0).cast::<u8>());
+                    let result7 = match l3 {
+                        0 => {
+                            let e = ();
+                            Ok(e)
+                        }
+                        1 => {
+                            let e = {
+                                let l4 = *ptr1
+                                    .add(::core::mem::size_of::<*const u8>())
+                                    .cast::<*mut u8>();
+                                let l5 = *ptr1
+                                    .add(2 * ::core::mem::size_of::<*const u8>())
+                                    .cast::<usize>();
+                                let len6 = l5;
+                                let bytes6 = _rt::Vec::from_raw_parts(
+                                    l4.cast(),
+                                    len6,
+                                    len6,
+                                );
+                                _rt::string_lift(bytes6)
+                            };
+                            Err(e)
+                        }
+                        _ => _rt::invalid_enum_discriminant(),
+                    };
+                    result7
+                }
+            }
+            #[allow(unused_unsafe, clippy::all)]
+            pub fn graph_save_tokenizer(tokenizer: &str) -> Result<(), _rt::String> {
+                unsafe {
+                    #[cfg_attr(target_pointer_width = "64", repr(align(8)))]
+                    #[cfg_attr(target_pointer_width = "32", repr(align(4)))]
+                    struct RetArea(
+                        [::core::mem::MaybeUninit<
+                            u8,
+                        >; 3 * ::core::mem::size_of::<*const u8>()],
+                    );
+                    let mut ret_area = RetArea(
+                        [::core::mem::MaybeUninit::uninit(); 3
+                            * ::core::mem::size_of::<*const u8>()],
+                    );
+                    let vec0 = tokenizer;
+                    let ptr0 = vec0.as_ptr().cast::<u8>();
+                    let len0 = vec0.len();
+                    let ptr1 = ret_area.0.as_mut_ptr().cast::<u8>();
+                    #[cfg(target_arch = "wasm32")]
+                    #[link(wasm_import_module = "klave:sdk/sdk")]
+                    unsafe extern "C" {
+                        #[link_name = "graph-save-tokenizer"]
+                        fn wit_import2(_: *mut u8, _: usize, _: *mut u8);
+                    }
+                    #[cfg(not(target_arch = "wasm32"))]
+                    unsafe extern "C" fn wit_import2(_: *mut u8, _: usize, _: *mut u8) {
+                        unreachable!()
+                    }
+                    unsafe { wit_import2(ptr0.cast_mut(), len0, ptr1) };
+                    let l3 = i32::from(*ptr1.add(0).cast::<u8>());
+                    let result7 = match l3 {
+                        0 => {
+                            let e = ();
+                            Ok(e)
+                        }
+                        1 => {
+                            let e = {
+                                let l4 = *ptr1
+                                    .add(::core::mem::size_of::<*const u8>())
+                                    .cast::<*mut u8>();
+                                let l5 = *ptr1
+                                    .add(2 * ::core::mem::size_of::<*const u8>())
+                                    .cast::<usize>();
+                                let len6 = l5;
+                                let bytes6 = _rt::Vec::from_raw_parts(
+                                    l4.cast(),
+                                    len6,
+                                    len6,
+                                );
+                                _rt::string_lift(bytes6)
+                            };
+                            Err(e)
+                        }
+                        _ => _rt::invalid_enum_discriminant(),
+                    };
+                    result7
+                }
+            }
+            #[allow(unused_unsafe, clippy::all)]
             pub fn graph_load(
                 input: &str,
                 encoding: i32,
@@ -4959,20 +5075,20 @@ mod _rt {
 )]
 #[doc(hidden)]
 #[allow(clippy::octal_escapes)]
-pub static __WIT_BINDGEN_COMPONENT_TYPE: [u8; 3214] = *b"\
-\0asm\x0d\0\x01\0\0\x19\x16wit-component-encoding\x04\0\x07\x8e\x18\x01A\x02\x01\
-A\x02\x01B\x7f\x01@\x01\x0aquery-names\x01\0\x04\0\x0eadd-user-query\x01\0\x01@\x01\
-\x10transaction-names\x01\0\x04\0\x14add-user-transaction\x01\x01\x01@\x01\x03ms\
-gs\x01\0\x04\0\x06notify\x01\x02\x04\0\x0cnotify-error\x01\x02\x04\0\x11on-succe\
-ss-notify\x01\x02\x01j\x01s\x01s\x01@\x01\x05params\0\x03\x04\0\x0dquery-context\
-\x01\x04\x01p}\x01j\x01\x05\x01s\x01@\x02\x05tables\x03key\x05\0\x06\x04\0\x0bre\
-ad-ledger\x01\x07\x01j\0\x01s\x01@\x03\x05tables\x03key\x05\x05value\x05\0\x08\x04\
-\0\x0cwrite-ledger\x01\x09\x01@\x02\x05tables\x03key\x05\0\x08\x04\0\x12remove-f\
-rom-ledger\x01\x0a\x01@\x02\x04names\x05models\0\x08\x04\0\x13load-lightgbm-mode\
-l\x01\x0b\x01@\x01\x04names\0\x08\x04\0\x15unload-lightgbm-model\x01\x0c\x01pu\x01\
-j\x01\x0d\x01s\x01@\x03\x04names\x04data\x0d\x0anb-outputsz\0\x0e\x04\0\x19infer\
--from-lightgbm-model\x01\x0f\x01j\x01\x7f\x01s\x01@\x01\x08key-names\0\x10\x04\0\
-\x0akey-exists\x01\x11\x01@\x05\x08key-names\x09algorithmz\x0dalgo-metadatas\x0b\
+pub static __WIT_BINDGEN_COMPONENT_TYPE: [u8; 3289] = *b"\
+\0asm\x0d\0\x01\0\0\x19\x16wit-component-encoding\x04\0\x07\xd9\x18\x01A\x02\x01\
+A\x02\x01B\x83\x01\x01@\x01\x0aquery-names\x01\0\x04\0\x0eadd-user-query\x01\0\x01\
+@\x01\x10transaction-names\x01\0\x04\0\x14add-user-transaction\x01\x01\x01@\x01\x03\
+msgs\x01\0\x04\0\x06notify\x01\x02\x04\0\x0cnotify-error\x01\x02\x04\0\x11on-suc\
+cess-notify\x01\x02\x01j\x01s\x01s\x01@\x01\x05params\0\x03\x04\0\x0dquery-conte\
+xt\x01\x04\x01p}\x01j\x01\x05\x01s\x01@\x02\x05tables\x03key\x05\0\x06\x04\0\x0b\
+read-ledger\x01\x07\x01j\0\x01s\x01@\x03\x05tables\x03key\x05\x05value\x05\0\x08\
+\x04\0\x0cwrite-ledger\x01\x09\x01@\x02\x05tables\x03key\x05\0\x08\x04\0\x12remo\
+ve-from-ledger\x01\x0a\x01@\x02\x04names\x05models\0\x08\x04\0\x13load-lightgbm-\
+model\x01\x0b\x01@\x01\x04names\0\x08\x04\0\x15unload-lightgbm-model\x01\x0c\x01\
+pu\x01j\x01\x0d\x01s\x01@\x03\x04names\x04data\x0d\x0anb-outputsz\0\x0e\x04\0\x19\
+infer-from-lightgbm-model\x01\x0f\x01j\x01\x7f\x01s\x01@\x01\x08key-names\0\x10\x04\
+\0\x0akey-exists\x01\x11\x01@\x05\x08key-names\x09algorithmz\x0dalgo-metadatas\x0b\
 extractablez\x06usages\x05\0\x03\x04\0\x0cgenerate-key\x01\x12\x01@\x07\x08key-n\
 ames\x0akey-formatz\x08key-data\x05\x09algorithmz\x0dalgo-metadatas\x0bextractab\
 lez\x06usages\x05\0\x03\x04\0\x0aimport-key\x01\x13\x01@\x02\x08key-names\x0akey\
@@ -5005,25 +5121,27 @@ simple-digest\x01%\x01@\x01\x03lenz\0\x06\x04\0\x10get-random-bytes\x01&\x01@\x0
 verify-quote\x01)\x01@\x01\x03uris\0\x03\x04\0\x0fconnection-open\x01*\x01@\x02\x0a\
 connections\x05querys\0\x03\x04\0\x09sql-query\x01+\x01@\x02\x0aconnections\x07c\
 ommands\0\x03\x04\0\x08sql-exec\x01,\x01@\0\0\x03\x04\0\x0cgraph-models\x01-\x04\
-\0\x10graph-tokenizers\x01-\x01@\x03\x05inputs\x08encodingz\x06targetz\0\x08\x04\
-\0\x0agraph-load\x01.\x01@\x01\x0amodel-names\0\x08\x04\0\x12graph-load-by-name\x01\
-/\x04\0\x14graph-unload-by-name\x01/\x01@\x01\x05inputs\0\x08\x04\0\x1cgraph-ini\
-t-execution-context\x010\x01@\x01\x0ccontext-names\0\x08\x04\0\x1egraph-delete-e\
-xecution-context\x011\x01@\0\0\x08\x04\0#graph-delete-all-execution-contexts\x01\
-2\x01@\x01\x0amodel-names\0\x03\x04\0\x12graph-model-n-embd\x013\x01@\x02\x05inp\
-uts\x0cinput-tensor\x05\0\x06\x04\0\x11inference-compute\x014\x01@\x02\x0ccontex\
-t-names\x06prompt\x05\0\x08\x04\0\x14inference-add-prompt\x015\x01@\x01\x0cconte\
-xt-names\0\x06\x04\0\x13inference-get-piece\x016\x01@\x02\x0ccontext-names\x09nb\
--piecesz\0\x06\x04\0\x14inference-get-pieces\x017\x01@\x01\x0ccontext-names\0\x03\
-\x04\0\x16inference-model-n-embd\x018\x01@\x03\x0ccontext-names\x0bwindow-sizez\x08\
-agg-rulez\0\x06\x04\0\"inference-get-aggregate-embeddings\x019\x01@\x02\x0cconte\
-xt-names\x06prompt\x05\0\x06\x04\0\x10inference-encode\x01:\x01@\x02\x0ccontext-\
-names\x09token-ids\x05\0\x06\x04\0\x10inference-decode\x01;\x01@\x02\x0ccontext-\
-names\x09token-ids\x05\0\x08\x04\0\x10inference-ingest\x01<\x01@\0\x01\0\x04\0\x0f\
-start-recording\x01=\x04\0\x0estop-recording\x01=\x04\0\x12cancel-transaction\x01\
-=\x03\0\x0dklave:sdk/sdk\x05\0\x04\0\x1dcomponent:klave-sdk/klave-sdk\x04\0\x0b\x0f\
-\x01\0\x09klave-sdk\x03\0\0\0G\x09producers\x01\x0cprocessed-by\x02\x0dwit-compo\
-nent\x070.227.1\x10wit-bindgen-rust\x060.41.0";
+\0\x10graph-tokenizers\x01-\x01@\x01\x05models\0\x08\x04\0\x10graph-save-model\x01\
+.\x01@\x01\x09tokenizers\0\x08\x04\0\x14graph-save-tokenizer\x01/\x01@\x03\x05in\
+puts\x08encodingz\x06targetz\0\x08\x04\0\x0agraph-load\x010\x01@\x01\x0amodel-na\
+mes\0\x08\x04\0\x12graph-load-by-name\x011\x04\0\x14graph-unload-by-name\x011\x01\
+@\x01\x05inputs\0\x08\x04\0\x1cgraph-init-execution-context\x012\x01@\x01\x0ccon\
+text-names\0\x08\x04\0\x1egraph-delete-execution-context\x013\x01@\0\0\x08\x04\0\
+#graph-delete-all-execution-contexts\x014\x01@\x01\x0amodel-names\0\x03\x04\0\x12\
+graph-model-n-embd\x015\x01@\x02\x05inputs\x0cinput-tensor\x05\0\x06\x04\0\x11in\
+ference-compute\x016\x01@\x02\x0ccontext-names\x06prompt\x05\0\x08\x04\0\x14infe\
+rence-add-prompt\x017\x01@\x01\x0ccontext-names\0\x06\x04\0\x13inference-get-pie\
+ce\x018\x01@\x02\x0ccontext-names\x09nb-piecesz\0\x06\x04\0\x14inference-get-pie\
+ces\x019\x01@\x01\x0ccontext-names\0\x03\x04\0\x16inference-model-n-embd\x01:\x01\
+@\x03\x0ccontext-names\x0bwindow-sizez\x08agg-rulez\0\x06\x04\0\"inference-get-a\
+ggregate-embeddings\x01;\x01@\x02\x0ccontext-names\x06prompt\x05\0\x06\x04\0\x10\
+inference-encode\x01<\x01@\x02\x0ccontext-names\x09token-ids\x05\0\x06\x04\0\x10\
+inference-decode\x01=\x01@\x02\x0ccontext-names\x09token-ids\x05\0\x08\x04\0\x10\
+inference-ingest\x01>\x01@\0\x01\0\x04\0\x0fstart-recording\x01?\x04\0\x0estop-r\
+ecording\x01?\x04\0\x12cancel-transaction\x01?\x03\0\x0dklave:sdk/sdk\x05\0\x04\0\
+\x1dcomponent:klave-sdk/klave-sdk\x04\0\x0b\x0f\x01\0\x09klave-sdk\x03\0\0\0G\x09\
+producers\x01\x0cprocessed-by\x02\x0dwit-component\x070.227.1\x10wit-bindgen-rus\
+t\x060.41.0";
 #[inline(never)]
 #[doc(hidden)]
 pub fn __link_custom_section_describing_imports() {

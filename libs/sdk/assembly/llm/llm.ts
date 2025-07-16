@@ -5,8 +5,8 @@
 
 import { JSON } from "@klave/as-json/assembly";
 import { Result } from '../index';
-import * as Llama2Idl from './llama2_idl_v1';
-export { Llama2Idl as Llama2 };
+import * as SecretLlamaIdl from './secret_llama_idl_v1';
+export { SecretLlamaIdl as SecretLlama };
 import * as WasiNnIdl from './wasi_nn_idl_v1';
 export { WasiNnIdl as WasiNn };
 
@@ -14,8 +14,10 @@ export { WasiNnIdl as WasiNn };
 declare function wasm_graph_models(result: ArrayBuffer, result_size: i32): i32;
 @external("env", "graph_tokenizers")
 declare function wasm_graph_tokenizers(result: ArrayBuffer, result_size: i32): i32;
-@external("env", "graph_load")
-declare function wasm_graph_load(builder: ArrayBuffer, encoding: i32, target: i32, error: ArrayBuffer, error_size: i32): i32;
+@external("env", "graph_save_model")
+declare function wasm_graph_model_save(model: ArrayBuffer, error: ArrayBuffer, error_size: i32): i32;
+@external("env", "graph_save_tokenizer")
+declare function wasm_graph_save_tokenizer(tokenizer: ArrayBuffer, error: ArrayBuffer, error_size: i32): i32;
 @external("env", "graph_load_by_name")
 declare function wasm_graph_load_by_name(model_name: ArrayBuffer, error: ArrayBuffer, error_size: i32): i32;
 @external("env", "graph_unload_by_name")
@@ -86,18 +88,32 @@ function LoadStatusToString(status: WasiNnIdl.LoadStatus): string
     }
 }
 
-export function graphLoad(builder: string, encoding: i32, target: i32): Result<string, Error>
+export function graphModelSave(model: string): Result<string, Error>
 {
     let error = new ArrayBuffer(64);
-    let result = wasm_graph_load(String.UTF8.encode(builder, true), encoding, target, error, error.byteLength);
+    let result = wasm_graph_model_save(String.UTF8.encode(model, true), error, error.byteLength);
     if (abs(result) > error.byteLength) {
         // buffer not big enough, retry with a properly sized one
         error = new ArrayBuffer(abs(result));
-        result = wasm_graph_load(String.UTF8.encode(builder, true), encoding, target, error, error.byteLength);
+        result = wasm_graph_model_save(String.UTF8.encode(model, true), error, error.byteLength);
     }
     if (result < 0)
-        return { data: LoadStatusToString(WasiNnIdl.LoadStatus.FAILED), err: new Error(String.UTF8.decode(error.slice(0, -result))) };
-    return { data: LoadStatusToString(WasiNnIdl.LoadStatus.LOADED_IN_RAM), err: null };
+        return { data: "", err: new Error(String.UTF8.decode(error.slice(0, -result))) };
+    return { data: "", err: null };
+}
+
+export function graphTokenizerSave(model: string): Result<string, Error>
+{
+    let error = new ArrayBuffer(64);
+    let result = wasm_graph_save_tokenizer(String.UTF8.encode(model, true), error, error.byteLength);
+    if (abs(result) > error.byteLength) {
+        // buffer not big enough, retry with a properly sized one
+        error = new ArrayBuffer(abs(result));
+        result = wasm_graph_save_tokenizer(String.UTF8.encode(model, true), error, error.byteLength);
+    }
+    if (result < 0)
+        return { data: "", err: new Error(String.UTF8.decode(error.slice(0, -result))) };
+    return { data: "", err: null };
 }
 
 export function graphLoadByName(model_name: string): Result<string, Error>

@@ -42,7 +42,7 @@ export class Model {
     max_threads!: i16;
     max_conccurent_queries!: i16;
     max_conccurent_queries_per_user!: i16;
-    inactivitiy_timeout!: i64;
+    inactivity_timeout!: i64;
 }
 
 @json

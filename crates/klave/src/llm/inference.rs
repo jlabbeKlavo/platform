@@ -1,6 +1,6 @@
 //! Environment definitions for compiling Klave Trustless Applications.
 //! LLM module for Klave SDK
-use crate::{llm::llama2_idl_v1::AggregateRule, sdk};
+use crate::{llm::secret_llama_idl_v1::AggregateRule, sdk};
 
 pub fn compute(input: &str, input_tensor: &[u8]) -> Result<Vec<u8>, Box<dyn std::error::Error>> {
     match sdk::inference_compute(input, input_tensor) {

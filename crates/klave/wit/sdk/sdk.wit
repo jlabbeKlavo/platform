@@ -76,12 +76,18 @@ interface sdk {
     //SecretLlama
     graph-models: func() -> result<string, string>;
     graph-tokenizers: func() -> result<string, string>;
+
+    graph-save-model: func(model: string) -> result<_, string>;
+    graph-save-tokenizer: func(tokenizer: string) -> result<_, string>;
+    
     graph-load: func(input: string, encoding: s32, target: s32) -> result<_, string>;
     graph-load-by-name: func(model-name: string) -> result<_, string>;
     graph-unload-by-name: func(model-name: string) -> result<_, string>;
+    
     graph-init-execution-context: func(input: string) -> result<_, string>;
     graph-delete-execution-context: func(context-name: string) -> result<_, string>;
     graph-delete-all-execution-contexts: func() -> result<_, string>;
+    
     graph-model-n-embd: func(model-name: string) -> result<string, string>;
 
     inference-compute: func(input: string, input-tensor: list<u8>) -> result<list<u8>, string>;

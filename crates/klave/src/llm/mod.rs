@@ -1,4 +1,4 @@
-pub mod llama2_idl_v1;
+pub mod secret_llama_idl_v1;
 pub mod wasi_nn_idl_v1;
 pub mod graph;
 pub mod inference;
