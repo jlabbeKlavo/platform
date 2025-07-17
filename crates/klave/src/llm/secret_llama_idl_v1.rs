@@ -42,10 +42,11 @@ impl TryFrom<&str> for EncryptionType {
 #[serde(into = "u8", try_from = "&str")]
 pub enum EngineType {
     Llama2c = 0, // Llama2c engine
-    SgxLlamaCpp = 1, // LlamaCpp sgx engine
-    TdxLlamaCpp = 2, // LlamaCpp tdx engine
-    HostLlamaCpp = 3, // LlamaCpp host engine
-    BitNet = 4, // BitNet engine
+    LlamaCpp = 1, // LlamaCpp engine
+    // SgxLlamaCpp = 1, // LlamaCpp sgx engine
+    // TdxLlamaCpp = 2, // LlamaCpp tdx engine
+    // HostLlamaCpp = 3, // LlamaCpp host engine
+    // BitNet = 4, // BitNet engine
 }
 
 impl From<EngineType> for u8 {
@@ -60,10 +61,11 @@ impl TryFrom<&str> for EngineType {
     fn try_from(value: &str) -> Result<Self, Self::Error> {
         match value {
             "Llama2c" => Ok(EngineType::Llama2c),
-            "SgxLlamaCpp" => Ok(EngineType::SgxLlamaCpp),
-            "TdxLlamaCpp" => Ok(EngineType::TdxLlamaCpp),
-            "HostLlamaCpp" => Ok(EngineType::HostLlamaCpp),
-            "BitNet" => Ok(EngineType::BitNet),
+            "LlamaCpp" => Ok(EngineType::LlamaCpp),
+            // "SgxLlamaCpp" => Ok(EngineType::SgxLlamaCpp),
+            // "TdxLlamaCpp" => Ok(EngineType::TdxLlamaCpp),
+            // "HostLlamaCpp" => Ok(EngineType::HostLlamaCpp),
+            // "BitNet" => Ok(EngineType::BitNet),
             _ => Err(format!("Unknown engine type: {}", value)),
         }
     }
@@ -209,7 +211,7 @@ pub struct Model {
     pub hash: Vec<u8>,
     pub is_loaded: bool,
     pub access: Access,
-    pub inactivity_timeout: i64,
+    pub inactivitiy_timeout: i64,
 }
 
 #[derive(Debug, Clone, Serialize, Deserialize)]
