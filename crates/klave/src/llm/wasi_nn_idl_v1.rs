@@ -2,6 +2,7 @@
 //! WASI NN module for Klave SDK
 
 use serde::{Deserialize, Serialize};
+use crate::llm::secret_llama_idl_v1;
 
 #[derive(Debug, Clone, Copy, PartialEq, Eq, Serialize, Deserialize)]
 pub enum LoadStatus {
@@ -12,6 +13,7 @@ pub enum LoadStatus {
 
 #[derive(Debug, Clone, Copy, PartialEq, Eq, Serialize, Deserialize)]
 #[repr(u8)]
+#[serde(into = "u8", try_from = "&str")]
 pub enum TensorType {
     Fp16 = 0,
     Fp32 = 1,
@@ -20,6 +22,29 @@ pub enum TensorType {
     U8 = 4,
     I32 = 5,
     I64 = 6,
+}
+
+impl From<TensorType> for u8 {
+    fn from(tensor_type: TensorType) -> Self {
+        tensor_type as u8
+    }
+}
+
+impl TryFrom<&str> for TensorType {
+    type Error = String;
+
+    fn try_from(value: &str) -> Result<Self, Self::Error> {
+        match value {
+            "Fp16" => Ok(TensorType::Fp16),
+            "Fp32" => Ok(TensorType::Fp32),
+            "Fp64" => Ok(TensorType::Fp64),
+            "Bf16" => Ok(TensorType::Bf16),
+            "U8" => Ok(TensorType::U8),
+            "I32" => Ok(TensorType::I32),
+            "I64" => Ok(TensorType::I64),
+            _ => Err(format!("Unknown tensor type: {}", value)),
+        }
+    }
 }
 
 #[derive(Debug, Clone, Serialize, Deserialize)]
@@ -60,8 +85,14 @@ pub enum ExecutionTarget {
 }
 
 #[derive(Debug, Clone, Serialize, Deserialize)]
+pub struct GraphLoadBuilder {
+    pub model: secret_llama_idl_v1::Model,
+    pub tokenizer: secret_llama_idl_v1::Tokenizer,
+}
+
+#[derive(Debug, Clone, Serialize, Deserialize)]
 pub struct GraphLoadInput {
-    pub builder: String,
+    pub builder: GraphLoadBuilder,
     pub encoding: GraphEncoding,
     pub target: ExecutionTarget,
 }

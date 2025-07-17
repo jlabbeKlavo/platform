@@ -3,7 +3,7 @@
 use crate::sdk;
 
 // Re-export the IDL modules
-pub use crate::llm::llama2_idl_v1 as llama2;
+pub use crate::llm::secret_llama_idl_v1 as llama2;
 pub use crate::llm::wasi_nn_idl_v1 as wasi_nn;
 
 impl wasi_nn::LoadStatus {
