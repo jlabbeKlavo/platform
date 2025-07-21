@@ -14,8 +14,8 @@ export { WasiNnIdl as WasiNn };
 declare function wasm_graph_models(result: ArrayBuffer, result_size: i32): i32;
 @external("env", "graph_tokenizers")
 declare function wasm_graph_tokenizers(result: ArrayBuffer, result_size: i32): i32;
-@external("env", "graph_load")
-declare function wasm_graph_load(builder: ArrayBuffer, encoding: i32, target: i32, error: ArrayBuffer, error_size: i32): i32;
+@external("env", "graph_save_component")
+declare function wasm_graph_save_component(component: ArrayBuffer, error: ArrayBuffer, error_size: i32): i32;
 @external("env", "graph_load_by_name")
 declare function wasm_graph_load_by_name(model_name: ArrayBuffer, error: ArrayBuffer, error_size: i32): i32;
 @external("env", "graph_unload_by_name")
@@ -27,10 +27,10 @@ declare function wasm_graph_delete_execution_context(context_name: ArrayBuffer, 
 @external("env", "graph_delete_all_execution_contexts")
 declare function wasm_graph_delete_all_execution_contexts(error: ArrayBuffer, error_size: i32): i32;
 
-@external("env", "inference_compute")
-declare function wasm_inference_compute(context_name: ArrayBuffer, input_tensor: ArrayBuffer, input_sensor_size: i32, output_tensor: ArrayBuffer, output_tensor_size: i32): i32;
 @external("env", "inference_add_prompt")
-declare function wasm_inference_add_prompt(context_name: ArrayBuffer, prompt: ArrayBuffer, prompt_size: i32, error: ArrayBuffer, error_size: i32): i32;
+declare function wasm_inference_add_prompt(context_name: ArrayBuffer, user_prompt: ArrayBuffer, error: ArrayBuffer, error_size: i32): i32;
+@external("env", "inference_add_frame")
+declare function wasm_inference_add_frame(context_name: ArrayBuffer, user_prompt: ArrayBuffer, frame_bytes_b64: ArrayBuffer, error: ArrayBuffer, error_size: i32): i32;
 @external("env", "inference_get_piece")
 declare function wasm_inference_get_piece(context_name: ArrayBuffer, inference_iteration: ArrayBuffer, inference_iteration_size: i32): i32;
 @external("env", "inference_get_pieces")
@@ -84,20 +84,6 @@ function LoadStatusToString(status: WasiNnIdl.LoadStatus): string
         default:
             return "UNKNOWN";
     }
-}
-
-export function graphLoad(builder: string, encoding: i32, target: i32): Result<string, Error>
-{
-    let error = new ArrayBuffer(64);
-    let result = wasm_graph_load(String.UTF8.encode(builder, true), encoding, target, error, error.byteLength);
-    if (abs(result) > error.byteLength) {
-        // buffer not big enough, retry with a properly sized one
-        error = new ArrayBuffer(abs(result));
-        result = wasm_graph_load(String.UTF8.encode(builder, true), encoding, target, error, error.byteLength);
-    }
-    if (result < 0)
-        return { data: LoadStatusToString(WasiNnIdl.LoadStatus.FAILED), err: new Error(String.UTF8.decode(error.slice(0, -result))) };
-    return { data: LoadStatusToString(WasiNnIdl.LoadStatus.LOADED_IN_RAM), err: null };
 }
 
 export function graphLoadByName(model_name: string): Result<string, Error>
@@ -170,32 +156,32 @@ export function graphDeleteAllExecutionContexts(): Result<string, Error>
     return { data: "All contexts successfully deleted", err: null };
 }
 
-export function inferenceCompute(context_name: string, input_tensor: ArrayBuffer): Result<ArrayBuffer, Error>
-{
-    let output_tensor = new ArrayBuffer(1024);
-    let result = wasm_inference_compute(String.UTF8.encode(context_name, true), input_tensor, input_tensor.byteLength, output_tensor, output_tensor.byteLength);
-    if (abs(result) > output_tensor.byteLength) {
-        // buffer not big enough, retry with a properly sized one
-        output_tensor = new ArrayBuffer(abs(result));
-        result = wasm_inference_compute(String.UTF8.encode(context_name, true), input_tensor, input_tensor.byteLength, output_tensor, output_tensor.byteLength);
-    }
-    if (result < 0)
-        return { data: new ArrayBuffer(0), err: new Error(String.UTF8.decode(output_tensor.slice(0, -result))) };
-    return { data: output_tensor.slice(0, result), err: null };
-}
-
-export function inferenceAddPrompt(context_name: string, prompt: ArrayBuffer): Result<string, Error>
+export function inferenceAddPrompt(context_name: string, user_prompt: string): Result<string, Error>
 {
     let error = new ArrayBuffer(64);
-    let result = wasm_inference_add_prompt(String.UTF8.encode(context_name, true), prompt, prompt.byteLength, error, error.byteLength);
+    let result = wasm_inference_add_prompt(String.UTF8.encode(context_name, true), String.UTF8.encode(user_prompt, true), error, error.byteLength);
     if (abs(result) > error.byteLength) {
         // buffer not big enough, retry with a properly sized one
         error = new ArrayBuffer(abs(result));
-        result = wasm_inference_add_prompt(String.UTF8.encode(context_name, true), prompt, prompt.byteLength, error, error.byteLength);
+        result = wasm_inference_add_prompt(String.UTF8.encode(context_name, true), String.UTF8.encode(user_prompt, true), error, error.byteLength);
     }
     if (result < 0)
         return { data: "", err: new Error(String.UTF8.decode(error.slice(0, -result))) };
     return { data: "Prompt successfully added", err: null };
+}
+
+export function inferenceAddFrame(context_name: string, user_prompt: string, frame_bytes_b64: string): Result<string, Error>
+{
+    let error = new ArrayBuffer(64);
+    let result = wasm_inference_add_frame(String.UTF8.encode(context_name, true), String.UTF8.encode(user_prompt, true), String.UTF8.encode(frame_bytes_b64, true), error, error.byteLength);
+    if (abs(result) > error.byteLength) {
+        // buffer not big enough, retry with a properly sized one
+        error = new ArrayBuffer(abs(result));
+        result = wasm_inference_add_frame(String.UTF8.encode(context_name, true), String.UTF8.encode(user_prompt, true), String.UTF8.encode(frame_bytes_b64, true), error, error.byteLength);
+    }
+    if (result < 0)
+        return { data: "", err: new Error(String.UTF8.decode(error.slice(0, -result))) };
+    return { data: "Frame successfully added", err: null };
 }
 
 export function inferenceGetPiece(context_name: string): Result<ArrayBuffer, Error>
@@ -257,11 +243,11 @@ export function inferenceEncode(context_name: string, prompt: ArrayBuffer): Resu
 export function inferenceDecode(context_name: string, token_ids: ArrayBuffer): Result<ArrayBuffer, Error>
 {
     let prompt = new ArrayBuffer(1024);
-    let result = wasm_inference_encode(String.UTF8.encode(context_name, true), token_ids, token_ids.byteLength);
+    let result = wasm_inference_decode(String.UTF8.encode(context_name, true), token_ids, token_ids.byteLength);
     if (abs(result) > prompt.byteLength) {
         // buffer not big enough, retry with a properly sized one
         prompt = new ArrayBuffer(abs(result));
-        result = wasm_inference_encode(String.UTF8.encode(context_name, true), token_ids, token_ids.byteLength);
+        result = wasm_inference_decode(String.UTF8.encode(context_name, true), token_ids, token_ids.byteLength);
     }
     if (result < 0)
         return { data: new ArrayBuffer(0), err: new Error(String.UTF8.decode(prompt.slice(0, -result))) };

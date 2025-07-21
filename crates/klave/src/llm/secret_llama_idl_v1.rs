@@ -42,10 +42,11 @@ impl TryFrom<&str> for EncryptionType {
 #[serde(into = "u8", try_from = "&str")]
 pub enum EngineType {
     Llama2c = 0, // Llama2c engine
-    SgxLlamaCpp = 1, // LlamaCpp sgx engine
-    TdxLlamaCpp = 2, // LlamaCpp tdx engine
-    HostLlamaCpp = 3, // LlamaCpp host engine
-    BitNet = 4, // BitNet engine
+    LlamaCpp = 1, // LlamaCpp engine
+    // SgxLlama2c = 1, // Llama2c sgx engine
+    // TdxLlama2c = 2, // Llama2c tdx engine
+    // HostLlama2c = 3, // Llama2c host engine
+    // BitNet = 4, // BitNet engine
 }
 
 impl From<EngineType> for u8 {
@@ -60,10 +61,11 @@ impl TryFrom<&str> for EngineType {
     fn try_from(value: &str) -> Result<Self, Self::Error> {
         match value {
             "Llama2c" => Ok(EngineType::Llama2c),
-            "SgxLlamaCpp" => Ok(EngineType::SgxLlamaCpp),
-            "TdxLlamaCpp" => Ok(EngineType::TdxLlamaCpp),
-            "HostLlamaCpp" => Ok(EngineType::HostLlamaCpp),
-            "BitNet" => Ok(EngineType::BitNet),
+            "LlamaCpp" => Ok(EngineType::LlamaCpp),
+            // "SgxLlamaCpp" => Ok(EngineType::SgxLlamaCpp),
+            // "TdxLlamaCpp" => Ok(EngineType::TdxLlamaCpp),
+            // "HostLlamaCpp" => Ok(EngineType::HostLlamaCpp),
+            // "BitNet" => Ok(EngineType::BitNet),
             _ => Err(format!("Unknown engine type: {}", value)),
         }
     }
@@ -189,6 +191,40 @@ impl TryFrom<&str> for ModelFormat {
     }
 }
 
+#[derive(Debug, Clone, Copy, PartialEq, Eq, Serialize, Deserialize)]
+#[repr(u8)]
+#[serde(into = "u8")]
+pub enum MLComponentType {
+    Model = 0,          // Main language model
+    Tokenizer = 1,      // Text tokenizer
+    Projector = 2,      // Multimodal projection layer (mtmd)
+    EmbeddingModel = 3, // Dedicated embedding model
+    Adapter = 4,        // LoRA adapters, etc.
+    Processor = 5,      // Other preprocessing components
+}
+
+impl From<MLComponentType> for u8 {
+    fn from(component_type: MLComponentType) -> Self {
+        component_type as u8
+    }
+}
+
+impl TryFrom<u8> for MLComponentType {
+    type Error = String;
+
+    fn try_from(value: u8) -> Result<Self, Self::Error> {
+        match value {
+            0 => Ok(MLComponentType::Model),
+            1 => Ok(MLComponentType::Tokenizer),
+            2 => Ok(MLComponentType::Projector),
+            3 => Ok(MLComponentType::EmbeddingModel),
+            4 => Ok(MLComponentType::Adapter),
+            5 => Ok(MLComponentType::Processor),
+            _ => Err(format!("Unknown component type: {}", value)),
+        }
+    }
+}
+
 #[derive(Debug, Clone, Serialize, Deserialize)]
 pub struct ModelDescription {
     pub brief: String, // e.g. "A large language model for text generation";
@@ -196,13 +232,24 @@ pub struct ModelDescription {
 }
 
 #[derive(Debug, Clone, Serialize, Deserialize)]
-pub struct Model {
-    pub name: String,
+pub struct MLMetadata {
+    pub r#type: MLComponentType,
     pub local_path: String,
     pub url: String,
     pub description: ModelDescription,
+    pub format: ModelFormat, // e.g. "Gguf", "Onnx", "Pytorch"
     pub engine_type: EngineType,
+    pub tensor_type: TensorType,           // Data precision
     pub engine_config: Value,
+    pub dependencies: Vec<String>,  // List of other components this depends on  
+    pub parent_component: String,   // Name of the parent component, if any
+}
+
+
+#[derive(Debug, Clone, Serialize, Deserialize)]
+pub struct MLComponent {
+    pub name: String,
+    pub metadata: MLMetadata,
     pub encryption_type: EncryptionType,
     pub encryption_key: Vec<u8>,
     pub hash_type: HashType,
@@ -210,23 +257,6 @@ pub struct Model {
     pub is_loaded: bool,
     pub access: Access,
     pub inactivity_timeout: i64,
-}
-
-#[derive(Debug, Clone, Serialize, Deserialize)]
-pub struct Tokenizer {
-    pub name: String,
-    pub local_path: String,
-    pub url: String,
-    pub description: String,
-    pub model_format: ModelFormat, // The model this tokenizer is associated with
-    pub engine_type: EngineType,
-    pub tensor_type: TensorType,
-    pub encryption_type: EncryptionType,
-    pub encryption_key: Vec<u8>,
-    pub hash_type: HashType,
-    pub hash: Vec<u8>,
-    pub is_loaded: bool,
-    pub access: Access,
 }
 
 #[derive(Debug, Clone, Serialize, Deserialize)]

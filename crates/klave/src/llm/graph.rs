@@ -30,8 +30,8 @@ pub fn tokenizers() -> Result<String, Box<dyn std::error::Error>> {
     }
 }
 
-pub fn load(input: &str, encoding: i32, target: i32) -> Result<&'static str, Box<dyn std::error::Error>> {
-    match sdk::graph_load(input, encoding, target) {
+pub fn save_component(input: &str) -> Result<&'static str, Box<dyn std::error::Error>> {
+    match sdk::graph_save_component(input) {
         Ok(_) => Ok(wasi_nn::LoadStatus::LoadedInRam.to_string()),
         Err(err) => Err(err.into()),
     }

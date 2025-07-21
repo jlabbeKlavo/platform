@@ -2,28 +2,28 @@
 //! LLM module for Klave SDK
 use crate::{llm::secret_llama_idl_v1::AggregateRule, sdk};
 
-pub fn compute(input: &str, input_tensor: &[u8]) -> Result<Vec<u8>, Box<dyn std::error::Error>> {
-    match sdk::inference_compute(input, input_tensor) {
-        Ok(result) => Ok(result),
-        Err(err) => Err(err.into()),
-    }
-}
-
-pub fn add_prompt(context_name: &str, prompt: &[u8]) -> Result<(), Box<dyn std::error::Error>> {
-    match sdk::inference_add_prompt(context_name, prompt) {
+pub fn add_prompt(context_name: &str, user_prompt: &str) -> Result<(), Box<dyn std::error::Error>> {
+    match sdk::inference_add_prompt(context_name, user_prompt) {
         Ok(_) => Ok(()),
         Err(err) => Err(err.into()),
     }
 }
 
-pub fn get_piece(context_name: &str) -> Result<Vec<u8>, Box<dyn std::error::Error>> {
+pub fn add_frame(context_name: &str, user_prompt: &str, frame_bytes_b64: &str) -> Result<(), Box<dyn std::error::Error>> {
+    match sdk::inference_add_frame(context_name, user_prompt, frame_bytes_b64) {
+        Ok(_) => Ok(()),
+        Err(err) => Err(err.into()),
+    }
+}
+
+pub fn get_piece(context_name: &str) -> Result<String, Box<dyn std::error::Error>> {
     match sdk::inference_get_piece(context_name) {
         Ok(result) => Ok(result),
         Err(err) => Err(err.into()),
     }
 }
 
-pub fn get_pieces(context_name: &str, nb_pieces: i32) -> Result<Vec<u8>, Box<dyn std::error::Error>> {
+pub fn get_pieces(context_name: &str, nb_pieces: i32) -> Result<String, Box<dyn std::error::Error>> {
     match sdk::inference_get_pieces(context_name, nb_pieces) {
         Ok(result) => Ok(result),
         Err(err) => Err(err.into()),

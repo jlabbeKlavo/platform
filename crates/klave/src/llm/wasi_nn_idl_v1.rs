@@ -86,8 +86,7 @@ pub enum ExecutionTarget {
 
 #[derive(Debug, Clone, Serialize, Deserialize)]
 pub struct GraphLoadBuilder {
-    pub model: secret_llama_idl_v1::Model,
-    pub tokenizer: secret_llama_idl_v1::Tokenizer,
+    pub components: Vec<secret_llama_idl_v1::MLComponent>
 }
 
 #[derive(Debug, Clone, Serialize, Deserialize)]
