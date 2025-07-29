@@ -41,12 +41,11 @@ impl TryFrom<&str> for EncryptionType {
 #[repr(u8)]
 #[serde(into = "u8", try_from = "&str")]
 pub enum EngineType {
-    Llama2c = 0, // Llama2c engine
-    LlamaCpp = 1, // LlamaCpp engine
-    // SgxLlama2c = 1, // Llama2c sgx engine
-    // TdxLlama2c = 2, // Llama2c tdx engine
-    // HostLlama2c = 3, // Llama2c host engine
-    // BitNet = 4, // BitNet engine
+    SgxLlama2c = 0, // Llama2c sgx engine
+    SgxLlamaCpp = 1, // Llama2c sgx engine
+    TdxLlamaCpp = 2, // Llama2c tdx engine
+    HostLlamaCpp = 3, // Llama2c host engine
+    BitNet = 4, // BitNet engine
 }
 
 impl From<EngineType> for u8 {
@@ -60,12 +59,11 @@ impl TryFrom<&str> for EngineType {
 
     fn try_from(value: &str) -> Result<Self, Self::Error> {
         match value {
-            "Llama2c" => Ok(EngineType::Llama2c),
-            "LlamaCpp" => Ok(EngineType::LlamaCpp),
-            // "SgxLlamaCpp" => Ok(EngineType::SgxLlamaCpp),
-            // "TdxLlamaCpp" => Ok(EngineType::TdxLlamaCpp),
-            // "HostLlamaCpp" => Ok(EngineType::HostLlamaCpp),
-            // "BitNet" => Ok(EngineType::BitNet),
+            "SgxLlama2c" => Ok(EngineType::SgxLlama2c),
+            "SgxLlamaCpp" => Ok(EngineType::SgxLlamaCpp),
+            "TdxLlamaCpp" => Ok(EngineType::TdxLlamaCpp),
+            "HostLlamaCpp" => Ok(EngineType::HostLlamaCpp),
+            "BitNet" => Ok(EngineType::BitNet),
             _ => Err(format!("Unknown engine type: {}", value)),
         }
     }
