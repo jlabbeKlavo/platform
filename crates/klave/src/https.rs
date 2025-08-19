@@ -24,7 +24,7 @@ impl Display for HttpRequest<String> {
 pub struct HttpResponse<T> {
     status_code: i32,
     headers: Vec<Vec<String>>,
-    body: T,
+    body: Option<T>,
 }
 
 impl Display for HttpResponse<String> {
@@ -32,7 +32,9 @@ impl Display for HttpResponse<String> {
         write!(
             f,
             "HttpResponse: status_code: {}, headers: {:?}, body: {}",
-            self.status_code, self.headers, self.body
+            self.status_code, 
+            self.headers, 
+            self.body.as_deref().unwrap_or("<null>")
         )
     }
 }
@@ -111,6 +113,8 @@ pub fn request(request: &Request<String>) -> Result<Response<String>, Box<dyn st
     parts.status = StatusCode::from_u16(http_response.status_code as u16)?;
     parts.version = request.version();
 
-    let response = Response::from_parts(parts, http_response.body);
+    // Handle null body case - convert Option<String> to String
+    let response_body = http_response.body.unwrap_or_default();
+    let response = Response::from_parts(parts, response_body);
     Ok(response)
 }
