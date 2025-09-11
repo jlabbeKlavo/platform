@@ -1,33 +1,57 @@
 use crate::sdk;
+use base64::{Engine as _, engine::general_purpose};
 use http::{Request, Response, StatusCode};
 use serde::{Deserialize, Serialize};
 use std::fmt::Display;
 
+pub trait HttpBody: Sized {
+    fn to_string(&self) -> Result<String, Box<dyn std::error::Error>>;
+    fn from_string(s: &str) -> Result<Self, Box<dyn std::error::Error>>;
+}
+
+impl HttpBody for String {
+    fn to_string(&self) -> Result<String, Box<dyn std::error::Error>> {
+        Ok(self.clone())
+    }
+    fn from_string(s: &str) -> Result<Self, Box<dyn std::error::Error>> {
+        Ok(s.to_string())
+    }
+}
+
+impl HttpBody for Vec<u8> {
+    fn to_string(&self) -> Result<String, Box<dyn std::error::Error>> {
+        Ok(general_purpose::STANDARD.encode(self))
+    }
+    fn from_string(s: &str) -> Result<Self, Box<dyn std::error::Error>> {
+        general_purpose::STANDARD.decode(s).map_err(|e| e.into())
+    }
+}
+
 #[derive(Deserialize, Serialize, Debug)]
-pub struct HttpRequest<T> {
+pub struct HttpRequest {
     method: String,
     hostname: String,
     port: i32,
     path: String,
     version: String,
     headers: Vec<Vec<String>>,
-    body: T,
+    body: String,
 }
 
-impl Display for HttpRequest<String> {
+impl Display for HttpRequest {
     fn fmt(&self, f: &mut std::fmt::Formatter) -> std::fmt::Result {
         write!(f, "HttpRequest: method: {}, hostname: {}, port: {}, path: {}, version: {}, headers: {:?}, body: {}", self.method, self.hostname, self.port, self.path, self.version, self.headers, self.body)
     }
 }
 
 #[derive(Deserialize, Serialize, Debug)]
-pub struct HttpResponse<T> {
+pub struct HttpResponse {
     status_code: i32,
     headers: Vec<Vec<String>>,
-    body: Option<T>,
+    body: Option<String>,
 }
 
-impl Display for HttpResponse<String> {
+impl Display for HttpResponse {
     fn fmt(&self, f: &mut std::fmt::Formatter) -> std::fmt::Result {
         write!(
             f,
@@ -40,7 +64,10 @@ impl Display for HttpResponse<String> {
 }
 
 /// Send a http request
-pub fn request(request: &Request<String>) -> Result<Response<String>, Box<dyn std::error::Error>> {
+pub fn request<T>(request: &Request<T>) -> Result<Response<String>, Box<dyn std::error::Error>>
+where
+    T: HttpBody + Default,
+{
     let port = match request.uri().port() {
         Some(port) => port.as_u16(),
         None => 443,
@@ -72,7 +99,7 @@ pub fn request(request: &Request<String>) -> Result<Response<String>, Box<dyn st
                 ])
             })
             .collect::<Result<Vec<_>, _>>()?,
-        body: request.body().to_string(),
+        body: request.body().to_string()?,
     };
 
     let http_request_str = serde_json::to_string(&http_request)?;
@@ -84,7 +111,7 @@ pub fn request(request: &Request<String>) -> Result<Response<String>, Box<dyn st
         }
     };
 
-    let http_response: HttpResponse<String> = match serde_json::from_str(&response) {
+    let http_response: HttpResponse = match serde_json::from_str(&response) {
         Ok(http_response) => http_response,
         Err(e) => {            
             return Err(format!("Failed to deserialize http response:\n{}\n{:?}\n{}\n{:?}", e, response, http_request, http_request_str).into())
@@ -113,8 +140,12 @@ pub fn request(request: &Request<String>) -> Result<Response<String>, Box<dyn st
     parts.status = StatusCode::from_u16(http_response.status_code as u16)?;
     parts.version = request.version();
 
-    // Handle null body case - convert Option<String> to String
-    let response_body = http_response.body.unwrap_or_default();
+    // Deserialize the response body to T
+    let response_body= if let Some(body_str) = &http_response.body {
+        body_str.clone()
+    } else {
+        String::new()
+    };
     let response = Response::from_parts(parts, response_body);
     Ok(response)
 }
