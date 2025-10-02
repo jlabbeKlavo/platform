@@ -274,7 +274,6 @@ pub struct InferenceIteration {
 }
 
 pub enum AggregateRule {
-    None,
     Average,
     Maximum,
     Minimum,

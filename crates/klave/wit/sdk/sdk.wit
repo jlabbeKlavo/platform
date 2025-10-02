@@ -64,6 +64,9 @@ interface sdk {
     //HTTP
     https-query: func(request: string) -> result<string, string>;
 
+    //Local-RPC
+    call-service: func(service-name: string, function-name: string, args: string) -> result<string, string>;
+
     //Attestation
     get-quote: func(challenge: list<u8>) -> result<string, string>;
     verify-quote: func(current-time: s64, quote-binary: list<u8>) -> result<string, string>;
@@ -90,10 +93,17 @@ interface sdk {
     inference-get-piece: func(context-name: string) -> result<string, string>;
     inference-get-pieces: func(context-name: string, nb-pieces: s32) -> result<string, string>;
     inference-model-n-embd: func(context-name: string) -> result<string, string>;
+    inference-get-embeddings: func(context-name: string, inputs-json: string) -> result<string, string>;
     inference-get-aggregate-embeddings: func(context-name: string, window-size: s32, agg-rule: s32) -> result<list<u8>, string>;
     inference-encode: func(context-name: string, prompt: list<u8>) -> result<list<u8>, string>;
     inference-decode: func(context-name: string, token-ids: list<u8>) -> result<list<u8>, string>;
     inference-ingest: func(context-name: string, token-ids: list<u8>) -> result<_, string>;
+    // Tool management for Secret Llama
+    inference-add-tool: func(context-name: string, name: string, description: string, parameters-schema: string) -> result<_, string>;
+    inference-remove-tool: func(context-name: string, name: string) -> result<_, string>;
+    inference-clear-tools: func(context-name: string) -> result<_, string>;
+    inference-list-tools: func(context-name: string) -> result<string, string>;
+    inference-set-tool-choice: func(context-name: string, choice-type: string, function-name: string) -> result<_, string>;
 
     //Subscription
     start-recording: func();
