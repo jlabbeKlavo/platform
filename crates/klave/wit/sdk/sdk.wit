@@ -61,11 +61,10 @@ interface sdk {
     //Random
     get-random-bytes: func(len: s32) -> result<list<u8>, string>;
 
-    //HTTP
+    //HTTPS
     https-query: func(request: string) -> result<string, string>;
-
     //RATLS
-    ratls-get-quote: func(host: string, challenge: list<u8>) -> result<list<u8>, string>;
+    ratls-query: func(request: string) -> result<string, string>;
 
     //Local-RPC
     call-service: func(service-name: string, function-name: string, args: string) -> result<string, string>;
