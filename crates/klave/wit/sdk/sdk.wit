@@ -64,6 +64,9 @@ interface sdk {
     //HTTP
     https-query: func(request: string) -> result<string, string>;
 
+    //RATLS
+    ratls-get-quote: func(host: string, challenge: list<u8>) -> result<list<u8>, string>;
+
     //Local-RPC
     call-service: func(service-name: string, function-name: string, args: string) -> result<string, string>;
 
@@ -93,6 +96,8 @@ interface sdk {
     inference-add-frame: func(context-name: string, user-prompt: string, frame-bytes-b64: string) -> result<_, string>;
     inference-get-piece: func(context-name: string) -> result<string, string>;
     inference-get-pieces: func(context-name: string, nb-pieces: s32) -> result<string, string>;
+    inference-get-messages: func(context-name: string, role: s32) -> result<string, string>;
+    inference-get-parameters: func(context-name: string) -> result<string, string>;
     inference-model-n-embd: func(context-name: string) -> result<string, string>;
     inference-get-embeddings: func(context-name: string, inputs-json: string) -> result<string, string>;
     inference-get-aggregate-embeddings: func(context-name: string, window-size: s32, agg-rule: s32) -> result<list<u8>, string>;

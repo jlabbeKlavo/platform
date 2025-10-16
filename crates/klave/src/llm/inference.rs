@@ -31,6 +31,20 @@ pub fn get_pieces(context_name: &str, nb_pieces: i32) -> Result<String, Box<dyn 
     }
 }
 
+pub fn get_messages(context_name: &str, role: i32) -> Result<String, Box<dyn std::error::Error>> {
+    match sdk::inference_get_messages(context_name, role) {
+        Ok(result) => Ok(result),
+        Err(err) => Err(err.into()),
+    }
+}
+
+pub fn get_parameters(context_name: &str) -> Result<String, Box<dyn std::error::Error>> {
+    match sdk::inference_get_parameters(context_name) {
+        Ok(result) => Ok(result),
+        Err(err) => Err(err.into()),
+    }
+}
+
 pub fn model_n_embd(context_name: &str) -> Result<String, Box<dyn std::error::Error>> {
     match sdk::inference_model_n_embd(context_name) {
         Ok(result) => Ok(result),

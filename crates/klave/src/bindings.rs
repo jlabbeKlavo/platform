@@ -4555,6 +4555,162 @@ pub mod klave {
                 }
             }
             #[allow(unused_unsafe, clippy::all)]
+            pub fn inference_get_messages(
+                context_name: &str,
+                role: i32,
+            ) -> Result<_rt::String, _rt::String> {
+                unsafe {
+                    #[cfg_attr(target_pointer_width = "64", repr(align(8)))]
+                    #[cfg_attr(target_pointer_width = "32", repr(align(4)))]
+                    struct RetArea(
+                        [::core::mem::MaybeUninit<
+                            u8,
+                        >; 3 * ::core::mem::size_of::<*const u8>()],
+                    );
+                    let mut ret_area = RetArea(
+                        [::core::mem::MaybeUninit::uninit(); 3
+                            * ::core::mem::size_of::<*const u8>()],
+                    );
+                    let vec0 = context_name;
+                    let ptr0 = vec0.as_ptr().cast::<u8>();
+                    let len0 = vec0.len();
+                    let ptr1 = ret_area.0.as_mut_ptr().cast::<u8>();
+                    #[cfg(target_arch = "wasm32")]
+                    #[link(wasm_import_module = "klave:sdk/sdk")]
+                    unsafe extern "C" {
+                        #[link_name = "inference-get-messages"]
+                        fn wit_import2(_: *mut u8, _: usize, _: i32, _: *mut u8);
+                    }
+                    #[cfg(not(target_arch = "wasm32"))]
+                    unsafe extern "C" fn wit_import2(
+                        _: *mut u8,
+                        _: usize,
+                        _: i32,
+                        _: *mut u8,
+                    ) {
+                        unreachable!()
+                    }
+                    unsafe {
+                        wit_import2(ptr0.cast_mut(), len0, _rt::as_i32(&role), ptr1)
+                    };
+                    let l3 = i32::from(*ptr1.add(0).cast::<u8>());
+                    let result10 = match l3 {
+                        0 => {
+                            let e = {
+                                let l4 = *ptr1
+                                    .add(::core::mem::size_of::<*const u8>())
+                                    .cast::<*mut u8>();
+                                let l5 = *ptr1
+                                    .add(2 * ::core::mem::size_of::<*const u8>())
+                                    .cast::<usize>();
+                                let len6 = l5;
+                                let bytes6 = _rt::Vec::from_raw_parts(
+                                    l4.cast(),
+                                    len6,
+                                    len6,
+                                );
+                                _rt::string_lift(bytes6)
+                            };
+                            Ok(e)
+                        }
+                        1 => {
+                            let e = {
+                                let l7 = *ptr1
+                                    .add(::core::mem::size_of::<*const u8>())
+                                    .cast::<*mut u8>();
+                                let l8 = *ptr1
+                                    .add(2 * ::core::mem::size_of::<*const u8>())
+                                    .cast::<usize>();
+                                let len9 = l8;
+                                let bytes9 = _rt::Vec::from_raw_parts(
+                                    l7.cast(),
+                                    len9,
+                                    len9,
+                                );
+                                _rt::string_lift(bytes9)
+                            };
+                            Err(e)
+                        }
+                        _ => _rt::invalid_enum_discriminant(),
+                    };
+                    result10
+                }
+            }
+            #[allow(unused_unsafe, clippy::all)]
+            pub fn inference_get_parameters(
+                context_name: &str,
+            ) -> Result<_rt::String, _rt::String> {
+                unsafe {
+                    #[cfg_attr(target_pointer_width = "64", repr(align(8)))]
+                    #[cfg_attr(target_pointer_width = "32", repr(align(4)))]
+                    struct RetArea(
+                        [::core::mem::MaybeUninit<
+                            u8,
+                        >; 3 * ::core::mem::size_of::<*const u8>()],
+                    );
+                    let mut ret_area = RetArea(
+                        [::core::mem::MaybeUninit::uninit(); 3
+                            * ::core::mem::size_of::<*const u8>()],
+                    );
+                    let vec0 = context_name;
+                    let ptr0 = vec0.as_ptr().cast::<u8>();
+                    let len0 = vec0.len();
+                    let ptr1 = ret_area.0.as_mut_ptr().cast::<u8>();
+                    #[cfg(target_arch = "wasm32")]
+                    #[link(wasm_import_module = "klave:sdk/sdk")]
+                    unsafe extern "C" {
+                        #[link_name = "inference-get-parameters"]
+                        fn wit_import2(_: *mut u8, _: usize, _: *mut u8);
+                    }
+                    #[cfg(not(target_arch = "wasm32"))]
+                    unsafe extern "C" fn wit_import2(_: *mut u8, _: usize, _: *mut u8) {
+                        unreachable!()
+                    }
+                    unsafe { wit_import2(ptr0.cast_mut(), len0, ptr1) };
+                    let l3 = i32::from(*ptr1.add(0).cast::<u8>());
+                    let result10 = match l3 {
+                        0 => {
+                            let e = {
+                                let l4 = *ptr1
+                                    .add(::core::mem::size_of::<*const u8>())
+                                    .cast::<*mut u8>();
+                                let l5 = *ptr1
+                                    .add(2 * ::core::mem::size_of::<*const u8>())
+                                    .cast::<usize>();
+                                let len6 = l5;
+                                let bytes6 = _rt::Vec::from_raw_parts(
+                                    l4.cast(),
+                                    len6,
+                                    len6,
+                                );
+                                _rt::string_lift(bytes6)
+                            };
+                            Ok(e)
+                        }
+                        1 => {
+                            let e = {
+                                let l7 = *ptr1
+                                    .add(::core::mem::size_of::<*const u8>())
+                                    .cast::<*mut u8>();
+                                let l8 = *ptr1
+                                    .add(2 * ::core::mem::size_of::<*const u8>())
+                                    .cast::<usize>();
+                                let len9 = l8;
+                                let bytes9 = _rt::Vec::from_raw_parts(
+                                    l7.cast(),
+                                    len9,
+                                    len9,
+                                );
+                                _rt::string_lift(bytes9)
+                            };
+                            Err(e)
+                        }
+                        _ => _rt::invalid_enum_discriminant(),
+                    };
+                    result10
+                }
+            }
+            #[allow(unused_unsafe, clippy::all)]
             pub fn inference_model_n_embd(
                 context_name: &str,
             ) -> Result<_rt::String, _rt::String> {
@@ -5639,9 +5795,9 @@ mod _rt {
 )]
 #[doc(hidden)]
 #[allow(clippy::octal_escapes)]
-pub static __WIT_BINDGEN_COMPONENT_TYPE: [u8; 3637] = *b"\
-\0asm\x0d\0\x01\0\0\x19\x16wit-component-encoding\x04\0\x07\xb5\x1b\x01A\x02\x01\
-A\x02\x01B\x8c\x01\x01@\x01\x0aquery-names\x01\0\x04\0\x0eadd-user-query\x01\0\x01\
+pub static __WIT_BINDGEN_COMPONENT_TYPE: [u8; 3718] = *b"\
+\0asm\x0d\0\x01\0\0\x19\x16wit-component-encoding\x04\0\x07\x86\x1c\x01A\x02\x01\
+A\x02\x01B\x8f\x01\x01@\x01\x0aquery-names\x01\0\x04\0\x0eadd-user-query\x01\0\x01\
 @\x01\x10transaction-names\x01\0\x04\0\x14add-user-transaction\x01\x01\x01@\x01\x03\
 msgs\x01\0\x04\0\x06notify\x01\x02\x04\0\x0cnotify-error\x01\x02\x04\0\x11on-suc\
 cess-notify\x01\x02\x01j\x01s\x01s\x01@\x01\x05params\0\x03\x04\0\x0dquery-conte\
@@ -5696,21 +5852,23 @@ names\0\x03\x04\0\x12graph-model-n-embd\x015\x01@\x02\x0ccontext-names\x0buser-p
 rompts\0\x08\x04\0\x14inference-add-prompt\x016\x01@\x03\x0ccontext-names\x0buse\
 r-prompts\x0fframe-bytes-b64s\0\x08\x04\0\x13inference-add-frame\x017\x01@\x01\x0c\
 context-names\0\x03\x04\0\x13inference-get-piece\x018\x01@\x02\x0ccontext-names\x09\
-nb-piecesz\0\x03\x04\0\x14inference-get-pieces\x019\x04\0\x16inference-model-n-e\
-mbd\x018\x01@\x02\x0ccontext-names\x0binputs-jsons\0\x03\x04\0\x18inference-get-\
-embeddings\x01:\x01@\x03\x0ccontext-names\x0bwindow-sizez\x08agg-rulez\0\x06\x04\
-\0\"inference-get-aggregate-embeddings\x01;\x01@\x02\x0ccontext-names\x06prompt\x05\
-\0\x06\x04\0\x10inference-encode\x01<\x01@\x02\x0ccontext-names\x09token-ids\x05\
-\0\x06\x04\0\x10inference-decode\x01=\x01@\x02\x0ccontext-names\x09token-ids\x05\
-\0\x08\x04\0\x10inference-ingest\x01>\x01@\x04\x0ccontext-names\x04names\x0bdesc\
-riptions\x11parameters-schemas\0\x08\x04\0\x12inference-add-tool\x01?\x01@\x02\x0c\
-context-names\x04names\0\x08\x04\0\x15inference-remove-tool\x01@\x04\0\x15infere\
-nce-clear-tools\x013\x04\0\x14inference-list-tools\x018\x01@\x03\x0ccontext-name\
-s\x0bchoice-types\x0dfunction-names\0\x08\x04\0\x19inference-set-tool-choice\x01\
-A\x01@\0\x01\0\x04\0\x0fstart-recording\x01B\x04\0\x0estop-recording\x01B\x04\0\x12\
-cancel-transaction\x01B\x03\0\x0dklave:sdk/sdk\x05\0\x04\0\x1dcomponent:klave-sd\
-k/klave-sdk\x04\0\x0b\x0f\x01\0\x09klave-sdk\x03\0\0\0G\x09producers\x01\x0cproc\
-essed-by\x02\x0dwit-component\x070.227.1\x10wit-bindgen-rust\x060.41.0";
+nb-piecesz\0\x03\x04\0\x14inference-get-pieces\x019\x01@\x02\x0ccontext-names\x04\
+rolez\0\x03\x04\0\x16inference-get-messages\x01:\x04\0\x18inference-get-paramete\
+rs\x018\x04\0\x16inference-model-n-embd\x018\x01@\x02\x0ccontext-names\x0binputs\
+-jsons\0\x03\x04\0\x18inference-get-embeddings\x01;\x01@\x03\x0ccontext-names\x0b\
+window-sizez\x08agg-rulez\0\x06\x04\0\"inference-get-aggregate-embeddings\x01<\x01\
+@\x02\x0ccontext-names\x06prompt\x05\0\x06\x04\0\x10inference-encode\x01=\x01@\x02\
+\x0ccontext-names\x09token-ids\x05\0\x06\x04\0\x10inference-decode\x01>\x01@\x02\
+\x0ccontext-names\x09token-ids\x05\0\x08\x04\0\x10inference-ingest\x01?\x01@\x04\
+\x0ccontext-names\x04names\x0bdescriptions\x11parameters-schemas\0\x08\x04\0\x12\
+inference-add-tool\x01@\x01@\x02\x0ccontext-names\x04names\0\x08\x04\0\x15infere\
+nce-remove-tool\x01A\x04\0\x15inference-clear-tools\x013\x04\0\x14inference-list\
+-tools\x018\x01@\x03\x0ccontext-names\x0bchoice-types\x0dfunction-names\0\x08\x04\
+\0\x19inference-set-tool-choice\x01B\x01@\0\x01\0\x04\0\x0fstart-recording\x01C\x04\
+\0\x0estop-recording\x01C\x04\0\x12cancel-transaction\x01C\x03\0\x0dklave:sdk/sd\
+k\x05\0\x04\0\x1dcomponent:klave-sdk/klave-sdk\x04\0\x0b\x0f\x01\0\x09klave-sdk\x03\
+\0\0\0G\x09producers\x01\x0cprocessed-by\x02\x0dwit-component\x070.227.1\x10wit-\
+bindgen-rust\x060.41.0";
 #[inline(never)]
 #[doc(hidden)]
 pub fn __link_custom_section_describing_imports() {
