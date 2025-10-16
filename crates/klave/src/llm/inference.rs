@@ -45,6 +45,20 @@ pub fn get_parameters(context_name: &str) -> Result<String, Box<dyn std::error::
     }
 }
 
+pub fn get_cumulative_usage_metrics(context_name: &str) -> Result<String, Box<dyn std::error::Error>> {
+    match sdk::inference_get_cumulative_usage_metrics(context_name) {
+        Ok(result) => Ok(result),
+        Err(err) => Err(err.into()),
+    }
+}
+
+pub fn get_usage_metrics_history(context_name: &str) -> Result<String, Box<dyn std::error::Error>> {
+    match sdk::inference_get_usage_metrics_history(context_name) {
+        Ok(result) => Ok(result),
+        Err(err) => Err(err.into()),
+    }
+}
+
 pub fn model_n_embd(context_name: &str) -> Result<String, Box<dyn std::error::Error>> {
     match sdk::inference_model_n_embd(context_name) {
         Ok(result) => Ok(result),
