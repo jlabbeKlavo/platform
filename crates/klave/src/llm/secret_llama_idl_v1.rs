@@ -223,6 +223,33 @@ impl TryFrom<u8> for MLComponentType {
     }
 }
 
+pub enum ConversationRole {
+    System = 0,
+    User = 1,
+    Assistant = 2,
+    All = 3,
+}
+
+impl From<ConversationRole> for u8 {
+    fn from(role: ConversationRole) -> Self {
+        role as u8
+    }
+}
+
+impl TryFrom<u8> for ConversationRole {
+    type Error = String;
+
+    fn try_from(value: u8) -> Result<Self, Self::Error> {
+        match value {
+            0 => Ok(ConversationRole::System),
+            1 => Ok(ConversationRole::User),
+            2 => Ok(ConversationRole::Assistant),
+            3 => Ok(ConversationRole::All),
+            _ => Err(format!("Unknown conversation role: {}", value)),
+        }
+    }
+}
+
 #[derive(Debug, Clone, Serialize, Deserialize)]
 pub struct ModelDescription {
     pub brief: String, // e.g. "A large language model for text generation";
