@@ -282,3 +282,41 @@ pub enum AggregateRule {
     First,
     Last,
 }
+
+/// Usage data structure containing token counts
+#[derive(Debug, Clone, Serialize, Deserialize)]
+pub struct UsageData {
+    pub prompt_tokens: u32,
+    pub completion_tokens: u32,
+    pub total_tokens: u32,
+}
+
+/// Timings data structure containing performance metrics
+#[derive(Debug, Clone, Serialize, Deserialize)]
+pub struct TimingsData {
+    pub prompt_n: u64,
+    pub prompt_ms: f32,
+    pub prompt_per_token_ms: f32,
+    pub prompt_per_second: f32,
+    pub predicted_n: u64,
+    pub predicted_ms: f32,
+    pub predicted_per_token_ms: f32,
+    pub predicted_per_second: f32,
+}
+
+/// Cumulative usage metrics combining usage and timing data
+#[derive(Debug, Clone, Serialize, Deserialize)]
+pub struct CumulativeUsageMetrics {
+    pub usage: UsageData,
+    pub timings: TimingsData,
+}
+
+/// Historical usage metrics entry for tracking per-message metrics
+#[derive(Debug, Clone, Serialize, Deserialize)]
+pub struct UsageMetricsHistoryEntry {
+    pub usage: UsageData,
+    pub timings: TimingsData,
+    pub message_order: u32,
+    pub timestamp: u64,
+    pub finish_reason: String,
+}

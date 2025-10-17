@@ -1,6 +1,6 @@
 //! Environment definitions for compiling Klave Trustless Applications.
 //! LLM module for Klave SDK
-use crate::{llm::secret_llama_idl_v1::AggregateRule, sdk};
+use crate::{llm::secret_llama_idl_v1::{AggregateRule, CumulativeUsageMetrics, UsageMetricsHistoryEntry}, sdk};
 use serde_json;
 
 pub fn add_prompt(context_name: &str, user_prompt: &str) -> Result<(), Box<dyn std::error::Error>> {
@@ -45,14 +45,14 @@ pub fn get_parameters(context_name: &str) -> Result<String, Box<dyn std::error::
     }
 }
 
-pub fn get_cumulative_usage_metrics(context_name: &str) -> Result<String, Box<dyn std::error::Error>> {
+pub fn get_cumulative_usage_metrics(context_name: &str) -> Result<CumulativeUsageMetrics, Box<dyn std::error::Error>> {
     match sdk::inference_get_cumulative_usage_metrics(context_name) {
         Ok(result) => Ok(result),
         Err(err) => Err(err.into()),
     }
 }
 
-pub fn get_usage_metrics_history(context_name: &str) -> Result<String, Box<dyn std::error::Error>> {
+pub fn get_usage_metrics_history(context_name: &str) -> Result<UsageMetricsHistoryEntry, Box<dyn std::error::Error>> {
     match sdk::inference_get_usage_metrics_history(context_name) {
         Ok(result) => Ok(result),
         Err(err) => Err(err.into()),
