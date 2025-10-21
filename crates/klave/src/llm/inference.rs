@@ -47,14 +47,20 @@ pub fn get_parameters(context_name: &str) -> Result<String, Box<dyn std::error::
 
 pub fn get_cumulative_usage_metrics(context_name: &str) -> Result<CumulativeUsageMetrics, Box<dyn std::error::Error>> {
     match sdk::inference_get_cumulative_usage_metrics(context_name) {
-        Ok(result) => Ok(result),
+        Ok(result) => Ok(match serde_json::from_str(&result) {
+            Ok(metrics) => metrics,
+            Err(e) => return Err(format!("Failed to parse cumulative usage metrics JSON: {}", e).into()),
+        }),
         Err(err) => Err(err.into()),
     }
 }
 
 pub fn get_usage_metrics_history(context_name: &str) -> Result<UsageMetricsHistoryEntry, Box<dyn std::error::Error>> {
     match sdk::inference_get_usage_metrics_history(context_name) {
-        Ok(result) => Ok(result),
+        Ok(result) => Ok(match serde_json::from_str(&result) {
+            Ok(metrics) => metrics,
+            Err(e) => return Err(format!("Failed to parse usage metrics history JSON: {} - {}", e, result).into()),
+        }),
         Err(err) => Err(err.into()),
     }
 }
